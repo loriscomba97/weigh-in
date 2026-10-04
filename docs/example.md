@@ -8,11 +8,11 @@ No network and no accounts are needed. From the repository root:
 
 ```bash
 python3 docs/example/make_acme.py /tmp/acme --raw /tmp/acme-raw
-python3 skills/competitor-analysis/scripts/git_stats.py /tmp/acme
-python3 skills/competitor-analysis/scripts/license_scan.py /tmp/acme
-python3 skills/competitor-analysis/scripts/telemetry_scan.py /tmp/acme
-python3 skills/competitor-analysis/scripts/app_security_scan.py /tmp/acme
-python3 skills/competitor-analysis/scripts/github_traction.py acme/acme-notes --offline /tmp/acme-raw --no-search --check-interval-hours 4
+python3 skills/weigh-in/scripts/git_stats.py /tmp/acme
+python3 skills/weigh-in/scripts/license_scan.py /tmp/acme
+python3 skills/weigh-in/scripts/telemetry_scan.py /tmp/acme
+python3 skills/weigh-in/scripts/app_security_scan.py /tmp/acme
+python3 skills/weigh-in/scripts/github_traction.py acme/acme-notes --offline /tmp/acme-raw --no-search --check-interval-hours 4
 ```
 
 Each script prints JSON. `--raw` saves fictional GitHub API responses, so the traction script can run offline.

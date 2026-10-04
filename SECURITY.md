@@ -31,6 +31,6 @@ These are instructions to the agent, not a guarantee about its behavior.
 
 ## Scope
 
-In scope: the scripts in `skills/competitor-analysis/scripts/`, the repository tooling in `scripts/`, and skill instructions that could lead an agent beyond a read-only analysis.
+In scope: the scripts in `skills/weigh-in/scripts/`, the repository tooling in `scripts/`, and skill instructions that could lead an agent beyond a read-only analysis.
 
 Out of scope: the behavior of the agent running the skill, and the repositories and sites under analysis.

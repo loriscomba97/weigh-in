@@ -32,7 +32,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-SCRIPTS = HERE.parents[1] / "skills" / "competitor-analysis" / "scripts"
+SCRIPTS = HERE.parents[1] / "skills" / "weigh-in" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 PEOPLE = {

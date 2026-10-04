@@ -1,12 +1,12 @@
-# competitor-analysis
+# weigh-in
 
-**Turn a competitor's code, numbers and site into decisions you can defend.**
+**Put your product and your rival on the same scale.**
 
-competitor-analysis is an [Agent Skill](https://agentskills.io) for agents that can run shell commands. Point it at a competitor, ideally an open-source one. It guides your agent through a kickoff, four research tracks and a set of documents, and it holds your own product to the same standard.
+weigh-in is an [Agent Skill](https://agentskills.io) for competitor analysis, for agents that can run shell commands. Point it at a competitor, ideally an open-source one. It guides your agent through a kickoff, four research tracks and a set of documents that end with decisions you can defend. At a boxing weigh-in both fighters step on the same scale: weigh-in measures your own product with the same scripts and the same rules.
 
-[Example](docs/example.md) · [Get started](#get-started) · [How it works](#how-it-works) · [Install options](docs/install.md) · [Issues](https://github.com/loriscomba97/competitor-analysis/issues)
+[Example](docs/example.md) · [Get started](#get-started) · [How it works](#how-it-works) · [Install options](docs/install.md) · [Issues](https://github.com/loriscomba97/weigh-in/issues)
 
-[![CI](https://github.com/loriscomba97/competitor-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/loriscomba97/competitor-analysis/actions/workflows/ci.yml)
+[![CI](https://github.com/loriscomba97/weigh-in/actions/workflows/ci.yml/badge.svg)](https://github.com/loriscomba97/weigh-in/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## What you get
@@ -25,7 +25,7 @@ The [example](docs/example.md) runs the scripts on Acme Notes, a fictional compe
 Use an agent that supports Agent Skills and runs shell commands, such as Claude Code or Codex. The scripts need git and Python 3.9 or later, with no packages.
 
 ```bash
-npx skills add loriscomba97/competitor-analysis
+npx skills add loriscomba97/weigh-in
 ```
 
 Then ask your agent:

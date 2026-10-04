@@ -6,8 +6,8 @@ Useful contributions include signatures for SDKs and assistants the scripts miss
 
 | Folder | What it holds |
 |---|---|
-| `skills/competitor-analysis/` | The installable skill: `SKILL.md`, `references/` and `scripts/` |
-| `skills/competitor-analysis/scripts/` | Python scripts, standard library only, and their data files |
+| `skills/weigh-in/` | The installable skill: `SKILL.md`, `references/` and `scripts/` |
+| `skills/weigh-in/scripts/` | Python scripts, standard library only, and their data files |
 | `tests/` | Unit tests with throwaway git repositories and saved API responses |
 | `scripts/` | Repository tooling: the skill validator and the public-safety scan |
 | `docs/` | Installation, and the example with `docs/example/make_acme.py`, which builds a fictional competitor |

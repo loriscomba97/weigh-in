@@ -1,4 +1,4 @@
-"""Shared helpers for the competitor-analysis scripts.
+"""Shared helpers for the weigh-in scripts.
 
 Standard library only, Python 3.9 or later. Every script in this folder is read-only: it never
 writes to the repository it analyzes, never signs in anywhere and never sends data anywhere
@@ -32,7 +32,7 @@ SKIP_DIRS = {
     ".cache", ".turbo", ".parcel-cache", ".angular", ".expo", ".dart_tool", "elm-stuff", "_build", "deps",
 }
 
-USER_AGENT = "competitor-analysis-skill (read-only research script)"
+USER_AGENT = "weigh-in/0.1 (read-only research script; +https://github.com/loriscomba97/weigh-in)"
 
 # Test code, by folder or by file name. Shared by the scripts that count tests apart or leave them out.
 TEST_DIRS = re.compile(

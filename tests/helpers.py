@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "skills" / "competitor-analysis" / "scripts"
+SCRIPTS = ROOT / "skills" / "weigh-in" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 GIT_ENV = {

@@ -1,5 +1,5 @@
 ---
-name: competitor-analysis
+name: weigh-in
 description: Analyze a competitor, or any product you measure yourself against, and turn the evidence into decisions. Covers who they are and how much they matter, what they sell and how they make money, the technology they own or borrow, their licenses and what you may reuse, their real traction, their telemetry and security, where they beat you and where you beat them, what to say in public and what to decide now. Strongest on open-source competitors, where it reads the code and its history without changing anything; closed products get a variant built on public sources with declared evidence levels. Use it when asked to analyze, research, benchmark or compare a competitor, a rival, an alternative or a similar product, to update an earlier competitor analysis, to check what you may reuse from another project, or to draft a comparison page, FAQ or positioning against a named product.
 license: MIT
 compatibility: Needs a shell and git. The helper scripts need Python 3.9 or later and no packages. Clones, web pages and public APIs need network access. Parallel helper agents and a browser help, but are optional.
@@ -7,9 +7,9 @@ metadata:
   version: "0.1.0"
 ---
 
-# Competitor analysis
+# weigh-in
 
-This skill runs a competitor analysis that a decision maker can act on. It reads the competitor's code, history, site and public numbers, holds your own product to the same standard, and ends with decisions, actions and the words you may use in public.
+This skill runs a competitor analysis that a decision maker can act on. It reads the competitor's code, history, site and public numbers, holds your own product to the same standard, and ends with decisions, actions and the words you may use in public. At a boxing weigh-in both fighters step on the same scale; this skill measures both products with the same rules.
 
 Three principles hold it together:
 

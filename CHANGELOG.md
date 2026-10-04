@@ -4,7 +4,7 @@
 
 First public release.
 
-- **One skill, `competitor-analysis`.** A kickoff with checks and questions that carry defaults, eight phases, four research tracks with deep dives, eleven lenses, comparison axes with example sets by product category, and two evidence scales.
+- **One skill, `weigh-in`.** A kickoff with checks and questions that carry defaults, eight phases, four research tracks with deep dives, eleven lenses, comparison axes with example sets by product category, and two evidence scales.
 - **Eighteen references.** Kickoff, process, tracks, lenses, axes, code, trust, numbers, licensing, the mirror, closed-source competitors, deliverables, public words and comparative advertising law, the register, publishing, pitfalls, checklists and templates.
 - **Fourteen scripts.** Python 3.9 or later, standard library only. Eleven read repositories, history, licenses, telemetry, app hardening, dependency versions, GitHub traction, registry and community counts, and web pages, and print JSON; two convert and split documents for Notion; one checks the wording of public copy.
 - **Repository tooling.** A validator for the Agent Skills format and the house style, a public-safety scan for commits and pushes, and CI on Python 3.9 and 3.14.

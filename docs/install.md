@@ -1,6 +1,6 @@
-# Install competitor-analysis
+# Install weigh-in
 
-competitor-analysis is one [Agent Skill](https://agentskills.io): a folder with a `SKILL.md`, references and scripts. It is written for agents that read Agent Skills and run shell commands, such as Claude Code and Codex.
+weigh-in is one [Agent Skill](https://agentskills.io): a folder with a `SKILL.md`, references and scripts. It is written for agents that read Agent Skills and run shell commands, such as Claude Code and Codex.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ competitor-analysis is one [Agent Skill](https://agentskills.io): a folder with 
 Run this in the project where you want to use the skill:
 
 ```bash
-npx skills add loriscomba97/competitor-analysis
+npx skills add loriscomba97/weigh-in
 ```
 
 Files go to `.agents/skills/`, with links for the agents you choose, such as `.claude/skills/` for Claude Code.
@@ -32,8 +32,8 @@ The installer collects anonymous usage data. Set `DISABLE_TELEMETRY=1` to turn i
 
 Run `npx skills list`, or ask your agent which skills are available. Then call the skill directly:
 
-- **Claude Code:** `/competitor-analysis https://github.com/acme/acme`
-- **Codex:** `$competitor-analysis https://github.com/acme/acme`, or `/skills` to select it.
+- **Claude Code:** `/weigh-in https://github.com/acme/acme`
+- **Codex:** `$weigh-in https://github.com/acme/acme`, or `/skills` to select it.
 
 You can also ask in plain words:
 
@@ -51,11 +51,11 @@ By default in `analyses/<competitor>-<YYYY-MM-DD>/` in the current project, untr
 
 ## Update or remove
 
-`npx skills update` updates installed skills. `npx skills remove competitor-analysis` removes this one.
+`npx skills update` updates installed skills. `npx skills remove weigh-in` removes this one.
 
 ## By hand
 
-Copy [`skills/competitor-analysis/`](../skills/competitor-analysis) into your agent's skills folder. Keep the folder intact: its references and scripts are included.
+Copy [`skills/weigh-in/`](../skills/weigh-in) into your agent's skills folder. Keep the folder intact: its references and scripts are included.
 
 | Agent | For one project | For your user |
 |---|---|---|
