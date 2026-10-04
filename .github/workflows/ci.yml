@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Python ${{ matrix.python }}
+    # Pinned image: Python 3.9 builds exist for Ubuntu 24.04 but not for newer images.
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.14"]
+    steps:
+      # Actions are pinned to full commit SHAs, so a moved tag cannot change what runs here.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the safety scan reads the whole history
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Public-safety scan (secrets, keys, emails, history)
+        run: python3 scripts/check_public_safety.py --history
+      - name: Skills follow the Agent Skills format, scripts compile and are documented
+        run: python3 scripts/validate.py
+      - name: Tests, with throwaway git repositories and no network
+        run: python3 -m unittest discover -s tests -v

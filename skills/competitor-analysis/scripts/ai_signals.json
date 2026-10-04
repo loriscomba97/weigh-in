@@ -1,0 +1,26 @@
+{
+  "_about": "Patterns git_stats.py uses to spot AI-assisted development in a repository's history. Trailers and bot authors are optional, so counts are a lower bound. Each example is a trailer value that must match its label; the tests use them. Extend the lists as new tools appear.",
+  "trailer_keys": ["Co-authored-by"],
+  "assistants": [
+    {"label": "Claude", "patterns": ["\\bclaude\\b", "anthropic\\.com"], "example": "Claude <noreply@example.com>"},
+    {"label": "OpenAI Codex or ChatGPT", "patterns": ["\\bcodex\\b", "chatgpt", "openai\\.com", "\\bgpt-?\\d"], "example": "Codex <noreply@example.com>"},
+    {"label": "GitHub Copilot", "patterns": ["copilot"], "example": "Copilot <noreply@example.com>"},
+    {"label": "Cursor", "patterns": ["\\bcursor(agent|-agent)?\\b", "cursor\\.(com|sh)"], "example": "Cursor Agent <noreply@example.com>"},
+    {"label": "Gemini or Jules", "patterns": ["\\bgemini\\b", "google-labs-jules", "\\bjules\\b"], "example": "Jules <noreply@example.com>"},
+    {"label": "Devin", "patterns": ["\\bdevin\\b", "devin-ai-integration"], "example": "Devin AI <noreply@example.com>"},
+    {"label": "Aider", "patterns": ["\\baider\\b"], "example": "aider <noreply@example.com>"},
+    {"label": "Amp", "patterns": ["\\bamp\\b", "ampcode\\.com"], "example": "Amp <noreply@example.com>"},
+    {"label": "Cline or Roo", "patterns": ["\\bcline\\b", "\\broo-?code\\b"], "example": "Cline <noreply@example.com>"},
+    {"label": "Windsurf or Codeium", "patterns": ["windsurf", "codeium"], "example": "Windsurf <noreply@example.com>"},
+    {"label": "Factory Droid", "patterns": ["factory\\.ai", "\\bdroid\\b"], "example": "Droid <noreply@example.com>"},
+    {"label": "Qwen", "patterns": ["\\bqwen"], "example": "Qwen Code <noreply@example.com>"},
+    {"label": "GLM or Zhipu", "patterns": ["\\bglm-?\\d", "zhipu", "\\bz\\.ai\\b"], "example": "GLM-5 <noreply@example.com>"},
+    {"label": "Kimi", "patterns": ["\\bkimi\\b", "moonshot"], "example": "Kimi <noreply@example.com>"},
+    {"label": "Grok", "patterns": ["\\bgrok\\b", "\\bx\\.ai\\b"], "example": "Grok <noreply@example.com>"},
+    {"label": "Tabnine", "patterns": ["tabnine"], "example": "Tabnine <noreply@example.com>"},
+    {"label": "Sourcegraph Cody", "patterns": ["\\bcody\\b", "sourcegraph"], "example": "Cody <noreply@example.com>"}
+  ],
+  "bot_author_patterns": ["\\[bot\\]", "^dependabot", "^renovate", "^github-actions", "^claude$", "^codex$", "^copilot", "^devin", "^cursor ?agent$"],
+  "branch_prefixes": ["codex/", "copilot/", "claude/", "cursor/", "devin/", "jules/", "aider/", "agent/", "ai/"],
+  "instruction_files": ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".cursorrules", ".cursor/rules", ".github/copilot-instructions.md", ".windsurfrules", ".clinerules", ".aider.conf.yml", ".claude/", ".codex/", ".junie/", ".kiro/"]
+}

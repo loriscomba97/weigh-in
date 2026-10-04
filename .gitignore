@@ -1,0 +1,17 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# evidence, clones and drafts from your own analyses stay outside the repository
+/analyses/
+/evidence/
+/clones/
+
+# environment files: real values never enter the repository
+.env*
+!.env.example
+
+# os and editor
+.DS_Store
+*.log
