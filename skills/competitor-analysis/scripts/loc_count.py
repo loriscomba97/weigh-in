@@ -26,7 +26,7 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
-from common import SKIP_DIRS, is_binary, is_git_repo, iter_files, print_json, rel
+from common import SKIP_DIRS, export_tree, is_binary, is_git_repo, is_test_path, iter_files, print_json, rel
 
 LANGUAGES = {
     ".py": "Python", ".pyi": "Python", ".js": "JavaScript", ".mjs": "JavaScript", ".cjs": "JavaScript",
@@ -42,14 +42,6 @@ LANGUAGES = {
     ".tf": "Terraform", ".nix": "Nix", ".gd": "GDScript",
 }
 
-TEST_PATH = re.compile(
-    r"(^|/)(__tests__|__test__|tests?|testing|spec|specs|e2e|integration[-_]tests?|androidTest|"
-    r"test[-_]?fixtures|fixtures|testdata|test_data|mocks?|__mocks__|[A-Za-z0-9]+Tests|[A-Za-z0-9]+UITests)(/|$)"
-)
-TEST_NAME = re.compile(
-    r"(\.(test|spec|e2e|stories)\.[a-z]+$)|(_test\.(go|py|rs|rb|exs|dart)$)|(^test_.*\.py$)|"
-    r"(Tests?\.(swift|kt|java|cs)$)|(_spec\.rb$)|(\.node-test\.mjs$)"
-)
 GENERATED_NAME = re.compile(
     r"(\.pb\.[a-z]+$)|(_pb2(_grpc)?\.py$)|(\.generated\.[a-z]+$)|(\.g\.dart$)|(\.min\.(js|css)$)|"
     r"(\.bundle\.js$)|(_generated\.[a-z]+$)|(\.designer\.cs$)"
@@ -61,7 +53,7 @@ def classify(path: str, head: bytes) -> str:
     name = path.rsplit("/", 1)[-1]
     if GENERATED_NAME.search(name) or GENERATED_MARKER.search(head[:800]):
         return "generated"
-    if TEST_PATH.search(path) or TEST_NAME.search(name):
+    if is_test_path(path):
         return "test"
     return "source"
 
@@ -103,19 +95,6 @@ def count(root: Path, depth: int, exclude: set) -> dict:
         "languages": sorted(({"language": k, **v} for k, v in languages.items()), key=lambda r: -(r["source"] + r["test"])),
         "largest_source_files": [{"path": p, "lines": n} for n, p in files],
     }
-
-
-def export_tree(repo: Path, rev: str, target: Path) -> None:
-    """Write the tree of rev into target with git archive, without touching the clone."""
-    archive = subprocess.run(["git", "-C", str(repo), "archive", "--format=tar", rev], capture_output=True)
-    if archive.returncode != 0:
-        raise RuntimeError(archive.stderr.decode(errors="replace").strip())
-    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
-        safe = [m for m in tar.getmembers() if not (m.name.startswith("/") or ".." in Path(m.name).parts) and (m.isfile() or m.isdir())]
-        if hasattr(tarfile, "data_filter"):
-            tar.extractall(target, members=safe, filter="data")
-        else:
-            tar.extractall(target, members=safe)
 
 
 def main() -> int:

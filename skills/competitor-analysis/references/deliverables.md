@@ -75,7 +75,15 @@ Templates for the header and for the appendix note are in [templates.md](templat
 
 ## 7. The quick variant
 
-One document with these sections: in short; who they are; what they do and for whom; license; where they stand against you; what to do; what I could not verify. Same header, same rules.
+One document, `00-quick-analysis.md`, and no appendices: working data stays in the scratch folder. Same header and rules, plus a line naming the tracks you ran. The sections:
+
+1. **In short:** 5 to 10 points.
+2. **Who they are:** company, people, size, pace, traction, with dates.
+3. **What they do and for whom:** promise, how it works, business model, trust facts.
+4. **License:** the reuse table for the parts that matter.
+5. **Where they stand against you:** a head-to-head of 6 to 10 rows with evidence levels, their strengths, your possible leads, uncomfortable truths about you, "if they..." scenarios and what not to say.
+6. **What to do:** decisions with defaults, actions before the next deadline and after, and the ten questions in one line each.
+7. **What I could not verify.**
 
 ## 8. The update variant
 

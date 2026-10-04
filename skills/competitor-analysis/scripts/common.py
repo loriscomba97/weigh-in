@@ -6,12 +6,17 @@ except the read-only requests it documents.
 """
 from __future__ import annotations
 
+import contextlib
+import gzip
 import html
+import io
 import json
 import os
 import re
 import subprocess
 import sys
+import tarfile
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Iterator, Optional
@@ -29,10 +34,41 @@ SKIP_DIRS = {
 
 USER_AGENT = "competitor-analysis-skill (read-only research script)"
 
+# Test code, by folder or by file name. Shared by the scripts that count tests apart or leave them out.
+TEST_DIRS = re.compile(
+    r"(^|/)(__tests__|__test__|tests?|testing|spec|specs|e2e|integration[-_]tests?|androidTest|"
+    r"test[-_]?fixtures|fixtures|testdata|test_data|mocks?|__mocks__|[A-Za-z0-9]+Tests|[A-Za-z0-9]+UITests)(/|$)"
+)
+TEST_FILE = re.compile(
+    r"([._-](test|tests|spec|e2e|stories)\.[a-z0-9]+$)|(_test\.(go|py|rs|rb|exs|dart)$)|(^test_.*\.py$)|"
+    r"(Tests?\.(swift|kt|java|cs)$)|(_spec\.rb$)"
+)
+
+
+def is_test_path(relative: str) -> bool:
+    """True when a repository-relative path is test code, by its folders or its file name."""
+    return bool(TEST_DIRS.search(relative) or TEST_FILE.search(relative.rsplit("/", 1)[-1]))
+
 
 def now_utc() -> str:
     """The current time in UTC, ISO 8601, to the second."""
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+# Folders that hold copies of other projects shipped with the product, unlike package-manager installs.
+VENDORED_DIRS = {"vendor", "vendors", "third_party", "third-party", "thirdparty", "external"}
+
+
+def iter_vendored(root: Path) -> Iterator[Path]:
+    """Every file inside vendored folders (third_party/, vendor/ and similar), without the
+    package-manager and build folders that may sit inside them."""
+    skip = SKIP_DIRS - VENDORED_DIRS
+    for current, dirs, files in os.walk(root):
+        relative_parts = set(Path(current).relative_to(root).parts)
+        dirs[:] = sorted(d for d in dirs if d not in skip)
+        if relative_parts & VENDORED_DIRS:
+            for name in sorted(files):
+                yield Path(current) / name
 
 
 def parse_iso(value: str) -> datetime:
@@ -93,6 +129,17 @@ def print_json(data) -> None:
     sys.stdout.write("\n")
 
 
+def decode_body(data: bytes) -> bytes:
+    """The body as the server meant it: archives sometimes return a page still gzip-compressed, as
+    it was stored, without saying so. Plain bodies come back unchanged."""
+    if data[:2] == b"\x1f\x8b":
+        try:
+            return gzip.decompress(data)
+        except (OSError, EOFError):
+            return data
+    return data
+
+
 def html_to_text(markup: str) -> str:
     """Readable text from an HTML page: title, scripts, styles and SVG removed, blocks on their own lines."""
     text = re.sub(r"(?is)<(title|script|style|svg|noscript|template)\b.*?</\1>", " ", markup)
@@ -107,3 +154,31 @@ def html_to_text(markup: str) -> str:
 def html_title(markup: str) -> Optional[str]:
     match = re.search(r"(?is)<title[^>]*>(.*?)</title>", markup)
     return html.unescape(re.sub(r"\s+", " ", match.group(1))).strip() if match else None
+
+
+def export_tree(repo: Path, rev: str, target: Path) -> None:
+    """Write the tree of rev into target with git archive, without touching the clone."""
+    archive = subprocess.run(["git", "-C", str(repo), "archive", "--format=tar", rev], capture_output=True)
+    if archive.returncode != 0:
+        raise RuntimeError(archive.stderr.decode(errors="replace").strip())
+    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
+        safe = [m for m in tar.getmembers() if not (m.name.startswith("/") or ".." in Path(m.name).parts) and (m.isfile() or m.isdir())]
+        if hasattr(tarfile, "data_filter"):
+            tar.extractall(target, members=safe, filter="data")
+        else:
+            tar.extractall(target, members=safe)
+
+
+@contextlib.contextmanager
+def tree_at(repo: Path, rev: Optional[str]):
+    """The folder to scan: the working tree as it is, or with rev a temporary copy of that commit's
+    tree (a branch, a tag, an older commit), so a scan never needs a checkout. Files marked
+    export-ignore in .gitattributes are left out of the copy."""
+    if not rev:
+        yield repo
+        return
+    if not is_git_repo(repo):
+        raise SystemExit("--at needs a git repository")
+    with tempfile.TemporaryDirectory(prefix="ca-tree-") as tmp:
+        export_tree(repo, rev, Path(tmp))
+        yield Path(tmp)

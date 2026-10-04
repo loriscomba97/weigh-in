@@ -21,7 +21,7 @@ from common import html_to_text
 class ClassifyAssetTest(unittest.TestCase):
     CASES = {
         "latest-mac.yml": ("update-check", "macos"),
-        "latest.yml": ("update-check", "any"),
+        "latest.yml": ("update-check", "windows"),
         "App-1.2.3-arm64-mac.zip.blockmap": ("update-delta", "macos"),
         "App-1.2.3-arm64-mac.zip": ("update-payload-or-archive", "macos"),
         "App.dmg": ("installer", "macos"),

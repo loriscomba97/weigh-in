@@ -104,7 +104,7 @@ python3 scripts/snapshot.py https://github.com/owner/repo --dest work/repo   # c
 python3 scripts/loc_count.py work/repo                       # source, test and generated lines, by area and language
 python3 scripts/loc_count.py work/repo --at "$(git -C work/repo rev-list -1 --before=2026-01-01 HEAD)"   # growth
 python3 scripts/git_stats.py work/repo                       # authors, bus factor, cadence, fixes, releases, hotspots, AI signals
-python3 scripts/dependency_versions.py work/repo --only electron --check-latest   # shipped versions against upstream
+python3 scripts/dependency_versions.py work/repo --only electron --check-latest --dates   # shipped versions against upstream
 python3 scripts/license_scan.py work/repo                    # license files, SPDX headers, manifests, relicensing, CLA and DCO
 python3 scripts/telemetry_scan.py work/repo                  # analytics and error SDKs, opt-out switches, external hosts
 python3 scripts/app_security_scan.py work/repo               # entitlements, Electron and Tauri settings, ATS, CSP, committed secrets
@@ -117,7 +117,7 @@ python3 scripts/md_to_notion.py --config notion.json --src analysis/ --out notio
 python3 scripts/chunk_markdown.py notion/*.nmd --out notion/chunks                 # split for upload
 ```
 
-Run them from this skill's folder or by full path. Keep work files (clones, raw responses, drafts) in a scratch folder, never in the deliverable. Put quotes around any URL that contains `?` or `&`. What each output means, and its traps, is in [code.md](references/code.md), [trust.md](references/trust.md), [numbers.md](references/numbers.md) and [licensing.md](references/licensing.md).
+Run them from this skill's folder or by full path. Keep work files (clones, raw responses, drafts) in a scratch folder, never in the deliverable. Put quotes around any URL that contains `?` or `&`. Use the skill folder's absolute path: many agent shells reset the working directory between commands. The repository scanners take `--at <branch>` to read a branch, such as your own release branch, without a checkout. On large repositories keep your own commands bounded: `git ls-files` and `git grep` instead of listing or searching whole folders, and never walk dependency folders. What each output means, and its traps, is in [code.md](references/code.md), [trust.md](references/trust.md), [numbers.md](references/numbers.md) and [licensing.md](references/licensing.md).
 
 ## Lenses
 

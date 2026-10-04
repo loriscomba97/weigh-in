@@ -170,9 +170,12 @@ class DependencyVersionsTest(unittest.TestCase):
 
 class PublicCountsTest(unittest.TestCase):
     def test_summaries_for_each_source(self):
-        npm = [{"downloads": 1}, {"downloads": 7}, {"downloads": 30, "end": "2026-10-01"}]
+        npm = [{"downloads": 1}, {"downloads": 7}, {"downloads": 30, "end": "2026-10-01"}, {"repository": {"url": "git+https://github.com/acme/x.git"}}]
         self.assertEqual(pc.summarize("npm", "x", npm)["downloads_last_month"], 30)
-        self.assertEqual(pc.summarize("pypi", "x", [{"data": {"last_day": 2, "last_week": 9, "last_month": 40}}])["downloads_last_week"], 9)
+        self.assertEqual(pc.summarize("npm", "x", npm)["repository"], "git+https://github.com/acme/x.git")
+        pypi = [{"data": {"last_day": 2, "last_week": 9, "last_month": 40}}, {"info": {"project_urls": {"Source": "https://github.com/acme/y"}}}]
+        self.assertEqual(pc.summarize("pypi", "x", pypi)["downloads_last_week"], 9)
+        self.assertEqual(pc.summarize("pypi", "x", pypi)["repository"], "https://github.com/acme/y")
         self.assertEqual(pc.summarize("crate", "x", [{"crate": {"downloads": 100, "recent_downloads": 10}}])["downloads_last_90_days"], 10)
         brew = [{"analytics": {"install": {"30d": {"git": 5, "git --HEAD": 1}, "90d": {"git": 9}, "365d": {}}}}]
         self.assertEqual(pc.summarize("brew", "git", brew), {"installs_30d": 5, "installs_90d": 9, "installs_365d": None})
@@ -180,7 +183,7 @@ class PublicCountsTest(unittest.TestCase):
         self.assertEqual(pc.summarize("open_vsx", "a/b", [{"downloadCount": 4}])["downloads_all_time"], 4)
         discord = [{"guild": {"name": "Example"}, "approximate_member_count": 120, "approximate_presence_count": 15}]
         self.assertEqual(pc.summarize("discord", "abc", discord)["members_approximate"], 120)
-        self.assertEqual(pc.summarize("npm", "x", [{"_error": "HTTP 404"}] * 3), {"error": "HTTP 404"})
+        self.assertEqual(pc.summarize("npm", "x", [{"_error": "HTTP 404"}] * 4), {"error": "HTTP 404"})
 
     def test_offline_run_and_name_checks(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -18,7 +18,7 @@ Keep a claims ledger in document 07: one row per claim you want to make.
 python3 scripts/claims_lint.py drafts/*.md --forbidden phrases.txt --competitor "Acme" --superlatives
 ```
 
-It flags forbidden phrases (one per line in the file, `re:` for patterns), blockquote answers over 40 words, superlatives and absolutes, and lines that name a competitor next to a number without a date. It checks wording only; it cannot make a claim true.
+It flags forbidden phrases (one per line in the file, `re:` for patterns), blockquote answers over 40 words, superlatives and absolutes, comparisons such as "unlike Acme", and lines that name a competitor next to a number without a date (versions, `file:line` citations and inline code do not count). Forbidden phrases and long answers fail the run; the rest are warnings unless you pass `--strict`. Wrap phrases you quote on purpose, as in a "What not to say" list, between `<!-- claims-lint: off -->` and `<!-- claims-lint: on -->`. It checks wording only; it cannot make a claim true.
 
 ## 2. What not to say: a fixed section
 

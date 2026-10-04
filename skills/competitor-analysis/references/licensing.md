@@ -16,7 +16,8 @@ Recognition is by key phrases. Then:
 - **One repository, several licenses** is common: an open core under a permissive license, an `enterprise/` or `ee/` folder under a commercial one, a component under copyleft. Map each folder.
 - **Manifests can disagree** with the license files. The license file usually governs; note the mismatch.
 - **Relicensing shows in history:** the commits that changed the license files, and the announcement. Note whether old releases keep the old license, which they usually do.
-- **Third-party components** have their own licenses. For the ones that matter, check the license at the version they ship (`scripts/dependency_versions.py`).
+- **Third-party components** have their own licenses. `vendored_license_files` lists the license files in vendored folders (`third_party/`, `vendor/`), which the rest of the scan skips; `--include-vendored` scans them in full. For components installed by a package manager, find the shipped version with `scripts/dependency_versions.py` and read the license at that version.
+- **Recognition starts from the title.** Some license texts name others: the MPL names the GPL family among its secondary licenses. The scan trusts the title on the first line first; when a file has no title, read it.
 - **Models and datasets** they ship or download at run time have licenses too, often with use restrictions.
 
 ## 2. License families

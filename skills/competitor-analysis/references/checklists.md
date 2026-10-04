@@ -53,10 +53,17 @@
 - [ ] Every document has "0. In short" and "What I could not verify"
 - [ ] The summary answers the ten questions
 - [ ] "What not to say", the concessions and the uncomfortable truths are there
-- [ ] Public drafts (FAQ, positioning lines) passed `scripts/claims_lint.py` and the forbidden phrases
+- [ ] Public drafts (FAQ, positioning lines), if there are any, passed `scripts/claims_lint.py` and the forbidden phrases
 - [ ] Decisions, actions and ideas are in the register, with sources
 - [ ] No commit and no publication happened without approval
 - [ ] Work files stayed in the scratch workspace
+
+## Quick variant
+
+- [ ] One document, `00-quick-analysis.md`, with the sections in [deliverables.md](deliverables.md)
+- [ ] The header names the tracks run and the defaults applied
+- [ ] A head-to-head with evidence levels, uncomfortable truths and what not to say are there
+- [ ] Decisions carry defaults; the ten questions are answered in one line each
 
 ## After approval, when publishing
 

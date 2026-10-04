@@ -7,6 +7,7 @@ Trust is often where a smaller product beats a bigger one, so it deserves eviden
 ```bash
 python3 scripts/telemetry_scan.py <repo>
 python3 scripts/telemetry_scan.py <repo> --include-tests --include-docs
+python3 scripts/telemetry_scan.py <repo> --at release/1.0 --max-hosts 0   # another branch, every host
 ```
 
 The scan reports analytics and error-reporting SDKs, lines that look like consent or opt-out switches, and every external host the code mentions, with known telemetry hosts flagged. Signatures live in `scripts/telemetry_signatures.json`; add one when you meet a new SDK.
@@ -45,8 +46,8 @@ python3 scripts/app_security_scan.py <repo>
 
 Signals by area, each with `file:line`:
 
-- **macOS:** entitlements, and the risky ones: library validation disabled, dyld environment variables allowed, unsigned executable memory, JIT, get-task-allow; the app sandbox; the hardened runtime; update keys for the updater.
-- **Electron:** fuses configured or not; `BrowserWindow` web preferences (`nodeIntegration`, `contextIsolation`, `sandbox`, `webSecurity`); signing, notarization and update-signature settings in the build configuration.
+- **macOS:** entitlements, and the risky ones: library validation disabled, dyld environment variables allowed, unsigned executable memory, JIT, get-task-allow; the app sandbox; the hardened runtime; update keys for the updater; notarization steps in the release workflow (`notarytool`, `stapler`). An Xcode project that never sets the hardened runtime or an entitlements file is reported as such: "not configured" is a finding, not a clean result.
+- **Electron:** fuses configured or not; `BrowserWindow` web preferences (`nodeIntegration`, `contextIsolation`, `sandbox`, `webSecurity`); signing, notarization and update-signature settings in the build configuration. `notarize: false` there often means notarization runs as a separate step: look for the notarization step signal before you write "not notarized".
 - **Tauri:** the updater public key; the content security policy.
 - **Android and iOS:** cleartext traffic, debuggable builds, App Transport Security exceptions, privacy manifests.
 - **Web:** Content-Security-Policy, permissive CORS, servers bound to every network interface (`0.0.0.0`), which other machines on the network can reach.

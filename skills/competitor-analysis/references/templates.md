@@ -41,7 +41,7 @@ I start now unless you change any of the above.
 **Basis.** <competitor repo> at `<sha>` (<date>); <sources>; our product at `<sha>` (<branch>).
 **Method.** Read only: <what was not done>. **Re-checked at the source:** <points>.
 **Evidence levels.** <the scale, if the document compares>.
-Detail with every citation in `appendices/<X>.md`. "(inference)" marks reasoning.
+Detail with every citation in `appendices/<X>.md` (quick variant: in the scratch folder). "(inference)" marks reasoning.
 
 ## 0. In short
 

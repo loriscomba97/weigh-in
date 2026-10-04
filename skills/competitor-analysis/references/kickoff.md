@@ -26,10 +26,10 @@ Find out where these live at each kickoff. Do not assume last time's paths.
 | Check | Why | How |
 |---|---|---|
 | Today's date | Every number in the analysis carries its date | The system clock. Write it in every header |
-| Every source of the competitor: main site, product sites, docs, repositories, release channels, package registries | One secondary page never tells the whole story. When pages disagree, the main site prevails | Search; the repository's homepage field; the site footer; "edit this page" links in the docs; the organization's other repositories |
+| Every source of the competitor: main site, product sites, docs, repositories, release channels, package registries | One secondary page never tells the whole story. When pages disagree, the main site prevails. Releases often live in a second repository too, such as an older mirror | Search; the repository's homepage field; the site footer; "edit this page" links in the docs; the organization's other repositories; the updater's feed in the code (electron-builder `publish`, Sparkle `SUFeedURL`, Tauri updater endpoints); `releases_elsewhere` in `scripts/github_traction.py` |
 | The commit you analyze | The whole analysis refers to that snapshot, written at the top of every document | `scripts/snapshot.py` |
 | The versions of the third-party components they really ship, and the latest upstream | A pinned version can hide a defect fixed upstream, and the reverse | `scripts/dependency_versions.py --check-latest --only <the components that matter>` |
-| Whether an earlier analysis exists | You need "What changed" and the corrections | The register and the analyses folder |
+| Whether an earlier analysis exists | You need "What changed" and the corrections | The register and the analyses folder, then the competitor's name across the workspace: `git ls-files \| grep -i <name>` and `git grep -il <name>`, because earlier work is often filed under another name |
 | The real state of your product: license, signing, CI, telemetry, next release | They are the first rows of every comparison, and the most contestable | Your repository, read only, and your site. See [mirror.md](mirror.md) |
 | The tools you have: web access, public APIs and tokens, a browser, a publishing connector, parallel helpers | They decide how you work and how much runs in parallel | Try each once. Note what is missing and which checks become "not verified" |
 
@@ -41,7 +41,7 @@ Ask only what sections 1 and 2 did not answer. Give every question a default, so
 
 1. Why now? A launch, a funding round, news, a customer's question. *Default: a routine check.*
 2. Who will read it: only you, the technical team as well, or will it become a public comparison page? *Default: you and the team; nothing public.*
-3. Full, quick or update? By when? *Default: full for a direct open-source competitor, quick otherwise, update when an earlier analysis exists.*
+3. Full, quick or update? By when, and with which budget of time and requests? *Default: full for a direct open-source competitor, quick otherwise, update when an earlier analysis exists, quick update when both apply; no fixed budget, but bounded commands.*
 
 **The competitor**
 
@@ -64,6 +64,11 @@ Ask only what sections 1 and 2 did not answer. Give every question a default, so
 14. Are there comparisons to exclude, for example with features of products you do not consider competitors? *Default: none.*
 15. Are there strategic paths already excluded, for example an architecture you rejected? *Default: none.*
 16. May competitors be named in your content, and on which conditions? *Default: named in internal documents only; public naming needs counsel.*
+
+**The tools**
+
+20. Is a GitHub token available? It raises the API limit and enables star history. *Default: no token; star pace from archived pages.*
+21. May a person download the competitor's installer, without running it, so you can check its signature and notarization? *Default: no download.*
 
 **The outputs**
 

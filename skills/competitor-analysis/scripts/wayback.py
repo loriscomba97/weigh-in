@@ -19,7 +19,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from common import USER_AGENT, html_to_text, now_utc, print_json
+from common import USER_AGENT, decode_body, html_to_text, now_utc, print_json
 
 CDX = "https://web.archive.org/cdx/search/cdx"
 
@@ -42,7 +42,7 @@ def parse_cdx(rows: list) -> list:
 def get(url: str, timeout: int = 60) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=timeout) as response:
-        return response.read()
+        return decode_body(response.read())
 
 
 def main() -> int:

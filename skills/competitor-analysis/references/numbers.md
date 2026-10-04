@@ -10,7 +10,7 @@ python3 scripts/github_traction.py owner/repo --check-interval-hours 4 --star-hi
 python3 scripts/github_traction.py owner/repo --offline <scratch>/raw     # re-read a saved run
 ```
 
-- **Stars** measure attention, not use. Their pace matters more than their total: a launch spike and a steady climb are different businesses. `--star-history N` samples N pages of the stargazer list to date star milestones and compute stars per day between them. GitHub lists stargazers to signed-in callers only, so it needs `GITHUB_TOKEN`; without it, use archived snapshots of the repository page (`scripts/wayback.py`).
+- **Stars** measure attention, not use. Their pace matters more than their total: a launch spike and a steady climb are different businesses. `--star-history N` samples N pages of the stargazer list to date star milestones and compute stars per day between them. GitHub lists stargazers to signed-in callers only, so it needs `GITHUB_TOKEN`. Without it, date the counts that archived pages show: the repository page, or the rounded count many projects display on their own site (`scripts/wayback.py`).
 - **Watchers:** the real count is `subscribers_count`. The API field called `watchers_count` repeats the stars. The script reports the real one.
 - **Forks** include one-click forks that never change anything. Active forks, with commits ahead, are a better signal.
 - **Issues and pull requests:** the repository's `open_issues_count` adds the two together. The script counts them apart through the search API.
@@ -20,8 +20,10 @@ python3 scripts/github_traction.py owner/repo --offline <scratch>/raw     # re-r
   - **update checks** (`latest-mac.yml`, `appcast.xml`, `latest.json`) are downloaded by running copies, often at launch and then on a timer. They measure activity, not people;
   - **update deltas, checksums and signatures** follow installs and updates;
   - **archives** on macOS are often update payloads.
-- **Running copies at once:** update checks per day multiplied by the check interval in hours, divided by 24. Read the interval from the product's code. It is an estimate: say so wherever you quote it, and give the formula.
+- **Running copies at once:** update checks per day multiplied by the check interval in hours, divided by 24. Read the interval from the product's code. It is an estimate: say so wherever you quote it, and give the formula. Two biases to name: an app that also checks at every launch adds checks for short sessions, which pushes the estimate up; copies that never update are missed, which pushes it down. When one repository releases several products (desktop, mobile, helpers), keep to the releases that carry the desktop update files, as the script does.
 - **Mirrored releases:** when the same tag is published in two repositories, count it once (`--releases-repo` merges by tag).
+- **Releases elsewhere:** `releases_elsewhere` lists the owner's other public repositories whose names suggest releases, and warns when the first release read comes long after the repository was created. Older versions often live in such a repository; add it with `--releases-repo`, or your totals will be too low.
+- **Mobile and desktop:** release windows count only releases that carry update-check files, so a mobile-only release in between does not cut a desktop window short.
 - **The rate limit:** 60 calls an hour without a token. Set `GITHUB_TOKEN` in the environment; the script sends it to the API only and never prints it.
 
 ## 2. Registries and communities
@@ -42,7 +44,7 @@ python3 scripts/public_counts.py --open-vsx <namespace/name> --discord <invite c
 | Open VSX | All-time downloads of an editor extension | Active users. The other main extension marketplace shows installs on its listing page |
 | Discord invite | Approximate members and members online | Engaged users. Online is one moment; check it at the same hour on several days |
 
-Compare like with like: the same source, the same period, the same date.
+Compare like with like: the same source, the same period, the same date. For npm, PyPI and crates.io the output carries the repository each package declares: check that it is the competitor's before you quote its numbers.
 
 ## 3. Other public signals
 

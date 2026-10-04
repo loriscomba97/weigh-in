@@ -1,503 +1,506 @@
 {
-  "_about": "Signatures telemetry_scan.py looks for. A hit is a signal to confirm by reading the code path: whether it runs by default, before consent, and what it sends. Extend the list freely.",
-  "sdks": [
-    {
-      "name": "PostHog",
-      "kind": "product analytics",
-      "patterns": [
-        "posthog-js",
-        "posthog-node",
-        "posthog-python",
-        "posthog-ios",
-        "posthog-android",
-        "posthog\\.init\\(",
-        "new PostHog\\(",
-        "import posthog"
-      ],
-      "hosts": [
-        "posthog.com"
-      ],
-      "keywords": [
-        "posthog"
-      ]
-    },
-    {
-      "name": "Segment",
-      "kind": "product analytics",
-      "patterns": [
-        "@segment/analytics",
-        "analytics-node",
-        "analytics\\.load\\(",
-        "segment\\.io",
-        "segment\\.com/analytics"
-      ],
-      "hosts": [
-        "segment.io",
-        "segment.com"
-      ],
-      "keywords": [
-        "segment"
-      ]
-    },
-    {
-      "name": "Mixpanel",
-      "kind": "product analytics",
-      "patterns": [
-        "mixpanel-browser",
-        "mixpanel\\.init\\(",
-        "import mixpanel",
-        "Mixpanel\\.initialize"
-      ],
-      "hosts": [
-        "mixpanel.com"
-      ],
-      "keywords": [
-        "mixpanel"
-      ]
-    },
-    {
-      "name": "Amplitude",
-      "kind": "product analytics",
-      "patterns": [
-        "@amplitude/",
-        "amplitude-js",
-        "amplitude\\.init\\(",
-        "Amplitude\\.instance"
-      ],
-      "hosts": [
-        "amplitude.com"
-      ],
-      "keywords": [
-        "amplitude"
-      ]
-    },
-    {
-      "name": "Google Analytics or Tag Manager",
-      "kind": "web analytics",
-      "patterns": [
-        "gtag\\(",
-        "googletagmanager\\.com",
-        "google-analytics\\.com",
-        "\\bGTM-[A-Z0-9]{5,8}\\b",
-        "react-ga",
-        "@next/third-parties/google"
-      ],
-      "hosts": [
-        "google-analytics.com",
-        "googletagmanager.com"
-      ],
-      "keywords": [
-        "gtag",
-        "googletagmanager",
-        "google-analytics",
-        "react-ga",
-        "third-parties/google",
-        "gtm-"
-      ]
-    },
-    {
-      "name": "Firebase Analytics or Crashlytics",
-      "kind": "analytics and crashes",
-      "patterns": [
-        "firebase/analytics",
-        "FirebaseAnalytics",
-        "firebase-crashlytics",
-        "Crashlytics"
-      ],
-      "hosts": [
-        "app-measurement.com",
-        "crashlytics.com"
-      ],
-      "keywords": [
-        "firebase",
-        "crashlytics"
-      ]
-    },
-    {
-      "name": "Sentry",
-      "kind": "error reporting",
-      "patterns": [
-        "@sentry/",
-        "sentry_sdk",
-        "sentry-sdk",
-        "Sentry\\.init\\(",
-        "SentrySDK\\.start",
-        "io\\.sentry",
-        "sentry-cocoa",
-        "sentry\\.io"
-      ],
-      "hosts": [
-        "sentry.io"
-      ],
-      "keywords": [
-        "sentry"
-      ]
-    },
-    {
-      "name": "Bugsnag",
-      "kind": "error reporting",
-      "patterns": [
-        "@bugsnag/",
-        "Bugsnag\\.start",
-        "\\bbugsnag\\b"
-      ],
-      "hosts": [
-        "bugsnag.com"
-      ],
-      "keywords": [
-        "bugsnag"
-      ]
-    },
-    {
-      "name": "Rollbar",
-      "kind": "error reporting",
-      "patterns": [
-        "\\brollbar\\b"
-      ],
-      "hosts": [
-        "rollbar.com"
-      ],
-      "keywords": [
-        "rollbar"
-      ]
-    },
-    {
-      "name": "Datadog",
-      "kind": "monitoring",
-      "patterns": [
-        "@datadog/browser",
-        "dd-trace",
-        "datadog-api",
-        "DD_API_KEY"
-      ],
-      "hosts": [
-        "datadoghq.com",
-        "datadoghq.eu"
-      ],
-      "keywords": [
-        "datadog",
-        "dd-trace",
-        "dd_api_key"
-      ]
-    },
-    {
-      "name": "New Relic",
-      "kind": "monitoring",
-      "patterns": [
-        "\\bnewrelic\\b",
-        "new-relic"
-      ],
-      "hosts": [
-        "newrelic.com",
-        "nr-data.net"
-      ],
-      "keywords": [
-        "newrelic",
-        "new-relic"
-      ]
-    },
-    {
-      "name": "LogRocket",
-      "kind": "session replay",
-      "patterns": [
-        "logrocket",
-        "LogRocket\\.init"
-      ],
-      "hosts": [
-        "logrocket.com",
-        "lr-ingest.io"
-      ],
-      "keywords": [
-        "logrocket"
-      ]
-    },
-    {
-      "name": "FullStory",
-      "kind": "session replay",
-      "patterns": [
-        "@fullstory/",
-        "\\bfullstory\\b"
-      ],
-      "hosts": [
-        "fullstory.com"
-      ],
-      "keywords": [
-        "fullstory"
-      ]
-    },
-    {
-      "name": "Hotjar",
-      "kind": "session replay",
-      "patterns": [
-        "\\bhotjar\\b",
-        "\\bhjid\\b"
-      ],
-      "hosts": [
-        "hotjar.com"
-      ],
-      "keywords": [
-        "hotjar",
-        "hjid"
-      ]
-    },
-    {
-      "name": "Heap",
-      "kind": "product analytics",
-      "patterns": [
-        "heap\\.load\\(",
-        "heapanalytics",
-        "@heap/"
-      ],
-      "hosts": [
-        "heapanalytics.com"
-      ],
-      "keywords": [
-        "heap.load",
-        "heapanalytics",
-        "@heap/"
-      ]
-    },
-    {
-      "name": "Plausible",
-      "kind": "web analytics",
-      "patterns": [
-        "plausible\\.io",
-        "next-plausible"
-      ],
-      "hosts": [
-        "plausible.io"
-      ],
-      "keywords": [
-        "plausible"
-      ]
-    },
-    {
-      "name": "Umami",
-      "kind": "web analytics",
-      "patterns": [
-        "umami\\.is",
-        "data-website-id"
-      ],
-      "hosts": [
-        "umami.is"
-      ],
-      "keywords": [
-        "umami",
-        "data-website-id"
-      ]
-    },
-    {
-      "name": "Matomo",
-      "kind": "web analytics",
-      "patterns": [
-        "\\bmatomo\\b",
-        "\\bpiwik\\b"
-      ],
-      "hosts": [
-        "matomo.cloud"
-      ],
-      "keywords": [
-        "matomo",
-        "piwik"
-      ]
-    },
-    {
-      "name": "Pendo",
-      "kind": "product analytics",
-      "patterns": [
-        "pendo\\.initialize",
-        "pendo\\.io"
-      ],
-      "hosts": [
-        "pendo.io"
-      ],
-      "keywords": [
-        "pendo"
-      ]
-    },
-    {
-      "name": "Intercom",
-      "kind": "messaging and analytics",
-      "patterns": [
-        "\\bintercom\\b",
-        "Intercom\\("
-      ],
-      "hosts": [
-        "intercom.io",
-        "intercomcdn.com"
-      ],
-      "keywords": [
-        "intercom"
-      ]
-    },
-    {
-      "name": "Statsig",
-      "kind": "feature flags and analytics",
-      "patterns": [
-        "\\bstatsig\\b"
-      ],
-      "hosts": [
-        "statsig.com",
-        "statsigapi.net"
-      ],
-      "keywords": [
-        "statsig"
-      ]
-    },
-    {
-      "name": "LaunchDarkly",
-      "kind": "feature flags",
-      "patterns": [
-        "\\blaunchdarkly\\b"
-      ],
-      "hosts": [
-        "launchdarkly.com"
-      ],
-      "keywords": [
-        "launchdarkly"
-      ]
-    },
-    {
-      "name": "OpenTelemetry",
-      "kind": "telemetry framework",
-      "patterns": [
-        "@opentelemetry/",
-        "opentelemetry",
-        "OTEL_EXPORTER_OTLP"
-      ],
-      "hosts": [],
-      "keywords": [
-        "opentelemetry",
-        "otel_exporter_otlp"
-      ]
-    },
-    {
-      "name": "Microsoft App Center or Application Insights",
-      "kind": "analytics and crashes",
-      "patterns": [
-        "appcenter-analytics",
-        "AppCenter\\.start",
-        "applicationinsights"
-      ],
-      "hosts": [
-        "appcenter.ms",
-        "applicationinsights.azure.com"
-      ],
-      "keywords": [
-        "appcenter",
-        "applicationinsights"
-      ]
-    },
-    {
-      "name": "TelemetryDeck",
-      "kind": "product analytics",
-      "patterns": [
-        "TelemetryDeck",
-        "telemetrydeck"
-      ],
-      "hosts": [
-        "telemetrydeck.com"
-      ],
-      "keywords": [
-        "telemetrydeck"
-      ]
-    },
-    {
-      "name": "Aptabase",
-      "kind": "product analytics",
-      "patterns": [
-        "\\baptabase\\b"
-      ],
-      "hosts": [
-        "aptabase.com"
-      ],
-      "keywords": [
-        "aptabase"
-      ]
-    },
-    {
-      "name": "Countly",
-      "kind": "product analytics",
-      "patterns": [
-        "\\bcountly\\b"
-      ],
-      "hosts": [
-        "count.ly"
-      ],
-      "keywords": [
-        "countly"
-      ]
-    },
-    {
-      "name": "Vercel Analytics",
-      "kind": "web analytics",
-      "patterns": [
-        "@vercel/analytics",
-        "@vercel/speed-insights"
-      ],
-      "hosts": [
-        "vercel-insights.com"
-      ],
-      "keywords": [
-        "@vercel/analytics",
-        "@vercel/speed-insights"
-      ]
-    }
-  ],
-  "controls": [
-    "DO_NOT_TRACK",
-    "\\btelemetry\\b",
-    "opt[-_ ]?out",
-    "optOut",
-    "opt[-_ ]?in",
-    "optIn",
-    "disable[_-]?(telemetry|analytics|tracking)",
-    "(telemetry|analytics|tracking)[_-]?(enabled|disabled)",
-    "\\bconsent\\b",
-    "anonymous[_-]?id",
-    "identify\\("
-  ],
-  "control_keywords": [
-    "do_not_track",
-    "telemetry",
-    "opt-out",
-    "opt_out",
-    "optout",
-    "opt out",
-    "opt-in",
-    "opt_in",
-    "optin",
-    "opt in",
-    "disable_telemetry",
-    "disabletelemetry",
-    "disable-telemetry",
-    "disable_analytics",
-    "disableanalytics",
-    "disable_tracking",
-    "analytics_enabled",
-    "analyticsenabled",
-    "tracking_enabled",
-    "consent",
-    "anonymous_id",
-    "anonymousid",
-    "anonymous-id",
-    "identify("
-  ],
-  "ignore_hosts": [
-    "localhost",
-    "127.0.0.1",
-    "0.0.0.0",
-    "example.com",
-    "example.org",
-    "example.net",
-    "schema.org",
-    "www.w3.org",
-    "w3.org",
-    "json-schema.org",
-    "xmlns.com",
-    "purl.org",
-    "ns.adobe.com",
-    "apple.com/DTDs",
-    "www.apple.com"
-  ]
+ "_about": "Signatures telemetry_scan.py looks for. A hit is a signal to confirm by reading the code path: whether it runs by default, before consent, and what it sends. Extend the list freely. ignore_control_lines drops lines that only look like switches, such as Kotlin and Java @OptIn annotations.",
+ "sdks": [
+  {
+   "name": "PostHog",
+   "kind": "product analytics",
+   "patterns": [
+    "posthog-js",
+    "posthog-node",
+    "posthog-python",
+    "posthog-ios",
+    "posthog-android",
+    "posthog\\.init\\(",
+    "new PostHog\\(",
+    "import posthog"
+   ],
+   "hosts": [
+    "posthog.com"
+   ],
+   "keywords": [
+    "posthog"
+   ]
+  },
+  {
+   "name": "Segment",
+   "kind": "product analytics",
+   "patterns": [
+    "@segment/analytics",
+    "analytics-node",
+    "analytics\\.load\\(",
+    "segment\\.io",
+    "segment\\.com/analytics"
+   ],
+   "hosts": [
+    "segment.io",
+    "segment.com"
+   ],
+   "keywords": [
+    "segment"
+   ]
+  },
+  {
+   "name": "Mixpanel",
+   "kind": "product analytics",
+   "patterns": [
+    "mixpanel-browser",
+    "mixpanel\\.init\\(",
+    "import mixpanel",
+    "Mixpanel\\.initialize"
+   ],
+   "hosts": [
+    "mixpanel.com"
+   ],
+   "keywords": [
+    "mixpanel"
+   ]
+  },
+  {
+   "name": "Amplitude",
+   "kind": "product analytics",
+   "patterns": [
+    "@amplitude/",
+    "amplitude-js",
+    "amplitude\\.init\\(",
+    "Amplitude\\.instance"
+   ],
+   "hosts": [
+    "amplitude.com"
+   ],
+   "keywords": [
+    "amplitude"
+   ]
+  },
+  {
+   "name": "Google Analytics or Tag Manager",
+   "kind": "web analytics",
+   "patterns": [
+    "gtag\\(",
+    "googletagmanager\\.com",
+    "google-analytics\\.com",
+    "\\bGTM-[A-Z0-9]{5,8}\\b",
+    "react-ga",
+    "@next/third-parties/google"
+   ],
+   "hosts": [
+    "google-analytics.com",
+    "googletagmanager.com"
+   ],
+   "keywords": [
+    "gtag",
+    "googletagmanager",
+    "google-analytics",
+    "react-ga",
+    "third-parties/google",
+    "gtm-"
+   ]
+  },
+  {
+   "name": "Firebase Analytics or Crashlytics",
+   "kind": "analytics and crashes",
+   "patterns": [
+    "firebase/analytics",
+    "FirebaseAnalytics",
+    "firebase-crashlytics",
+    "Crashlytics"
+   ],
+   "hosts": [
+    "app-measurement.com",
+    "crashlytics.com"
+   ],
+   "keywords": [
+    "firebase",
+    "crashlytics"
+   ]
+  },
+  {
+   "name": "Sentry",
+   "kind": "error reporting",
+   "patterns": [
+    "@sentry/",
+    "sentry_sdk",
+    "sentry-sdk",
+    "Sentry\\.init\\(",
+    "SentrySDK\\.start",
+    "io\\.sentry",
+    "sentry-cocoa",
+    "sentry\\.io"
+   ],
+   "hosts": [
+    "sentry.io"
+   ],
+   "keywords": [
+    "sentry"
+   ]
+  },
+  {
+   "name": "Bugsnag",
+   "kind": "error reporting",
+   "patterns": [
+    "@bugsnag/",
+    "Bugsnag\\.start",
+    "\\bbugsnag\\b"
+   ],
+   "hosts": [
+    "bugsnag.com"
+   ],
+   "keywords": [
+    "bugsnag"
+   ]
+  },
+  {
+   "name": "Rollbar",
+   "kind": "error reporting",
+   "patterns": [
+    "\\brollbar\\b"
+   ],
+   "hosts": [
+    "rollbar.com"
+   ],
+   "keywords": [
+    "rollbar"
+   ]
+  },
+  {
+   "name": "Datadog",
+   "kind": "monitoring",
+   "patterns": [
+    "@datadog/browser",
+    "dd-trace",
+    "datadog-api",
+    "DD_API_KEY"
+   ],
+   "hosts": [
+    "datadoghq.com",
+    "datadoghq.eu"
+   ],
+   "keywords": [
+    "datadog",
+    "dd-trace",
+    "dd_api_key"
+   ]
+  },
+  {
+   "name": "New Relic",
+   "kind": "monitoring",
+   "patterns": [
+    "\\bnewrelic\\b",
+    "new-relic"
+   ],
+   "hosts": [
+    "newrelic.com",
+    "nr-data.net"
+   ],
+   "keywords": [
+    "newrelic",
+    "new-relic"
+   ]
+  },
+  {
+   "name": "LogRocket",
+   "kind": "session replay",
+   "patterns": [
+    "logrocket",
+    "LogRocket\\.init"
+   ],
+   "hosts": [
+    "logrocket.com",
+    "lr-ingest.io"
+   ],
+   "keywords": [
+    "logrocket"
+   ]
+  },
+  {
+   "name": "FullStory",
+   "kind": "session replay",
+   "patterns": [
+    "@fullstory/",
+    "\\bfullstory\\b"
+   ],
+   "hosts": [
+    "fullstory.com"
+   ],
+   "keywords": [
+    "fullstory"
+   ]
+  },
+  {
+   "name": "Hotjar",
+   "kind": "session replay",
+   "patterns": [
+    "\\bhotjar\\b",
+    "\\bhjid\\b"
+   ],
+   "hosts": [
+    "hotjar.com"
+   ],
+   "keywords": [
+    "hotjar",
+    "hjid"
+   ]
+  },
+  {
+   "name": "Heap",
+   "kind": "product analytics",
+   "patterns": [
+    "heap\\.load\\(",
+    "heapanalytics",
+    "@heap/"
+   ],
+   "hosts": [
+    "heapanalytics.com"
+   ],
+   "keywords": [
+    "heap.load",
+    "heapanalytics",
+    "@heap/"
+   ]
+  },
+  {
+   "name": "Plausible",
+   "kind": "web analytics",
+   "patterns": [
+    "plausible\\.io",
+    "next-plausible"
+   ],
+   "hosts": [
+    "plausible.io"
+   ],
+   "keywords": [
+    "plausible"
+   ]
+  },
+  {
+   "name": "Umami",
+   "kind": "web analytics",
+   "patterns": [
+    "umami\\.is",
+    "data-website-id"
+   ],
+   "hosts": [
+    "umami.is"
+   ],
+   "keywords": [
+    "umami",
+    "data-website-id"
+   ]
+  },
+  {
+   "name": "Matomo",
+   "kind": "web analytics",
+   "patterns": [
+    "\\bmatomo\\b",
+    "\\bpiwik\\b"
+   ],
+   "hosts": [
+    "matomo.cloud"
+   ],
+   "keywords": [
+    "matomo",
+    "piwik"
+   ]
+  },
+  {
+   "name": "Pendo",
+   "kind": "product analytics",
+   "patterns": [
+    "pendo\\.initialize",
+    "pendo\\.io"
+   ],
+   "hosts": [
+    "pendo.io"
+   ],
+   "keywords": [
+    "pendo"
+   ]
+  },
+  {
+   "name": "Intercom",
+   "kind": "messaging and analytics",
+   "patterns": [
+    "\\bintercom\\b",
+    "Intercom\\("
+   ],
+   "hosts": [
+    "intercom.io",
+    "intercomcdn.com"
+   ],
+   "keywords": [
+    "intercom"
+   ]
+  },
+  {
+   "name": "Statsig",
+   "kind": "feature flags and analytics",
+   "patterns": [
+    "\\bstatsig\\b"
+   ],
+   "hosts": [
+    "statsig.com",
+    "statsigapi.net"
+   ],
+   "keywords": [
+    "statsig"
+   ]
+  },
+  {
+   "name": "LaunchDarkly",
+   "kind": "feature flags",
+   "patterns": [
+    "\\blaunchdarkly\\b"
+   ],
+   "hosts": [
+    "launchdarkly.com"
+   ],
+   "keywords": [
+    "launchdarkly"
+   ]
+  },
+  {
+   "name": "OpenTelemetry",
+   "kind": "telemetry framework",
+   "patterns": [
+    "@opentelemetry/",
+    "opentelemetry",
+    "OTEL_EXPORTER_OTLP"
+   ],
+   "hosts": [],
+   "keywords": [
+    "opentelemetry",
+    "otel_exporter_otlp"
+   ]
+  },
+  {
+   "name": "Microsoft App Center or Application Insights",
+   "kind": "analytics and crashes",
+   "patterns": [
+    "appcenter-analytics",
+    "AppCenter\\.start",
+    "applicationinsights"
+   ],
+   "hosts": [
+    "appcenter.ms",
+    "applicationinsights.azure.com"
+   ],
+   "keywords": [
+    "appcenter",
+    "applicationinsights"
+   ]
+  },
+  {
+   "name": "TelemetryDeck",
+   "kind": "product analytics",
+   "patterns": [
+    "TelemetryDeck",
+    "telemetrydeck"
+   ],
+   "hosts": [
+    "telemetrydeck.com"
+   ],
+   "keywords": [
+    "telemetrydeck"
+   ]
+  },
+  {
+   "name": "Aptabase",
+   "kind": "product analytics",
+   "patterns": [
+    "\\baptabase\\b"
+   ],
+   "hosts": [
+    "aptabase.com"
+   ],
+   "keywords": [
+    "aptabase"
+   ]
+  },
+  {
+   "name": "Countly",
+   "kind": "product analytics",
+   "patterns": [
+    "\\bcountly\\b"
+   ],
+   "hosts": [
+    "count.ly"
+   ],
+   "keywords": [
+    "countly"
+   ]
+  },
+  {
+   "name": "Vercel Analytics",
+   "kind": "web analytics",
+   "patterns": [
+    "@vercel/analytics",
+    "@vercel/speed-insights"
+   ],
+   "hosts": [
+    "vercel-insights.com"
+   ],
+   "keywords": [
+    "@vercel/analytics",
+    "@vercel/speed-insights"
+   ]
+  }
+ ],
+ "controls": [
+  "DO_NOT_TRACK",
+  "\\btelemetry\\b",
+  "opt[-_ ]?out",
+  "optOut",
+  "opt[-_ ]?in",
+  "optIn",
+  "disable[_-]?(telemetry|analytics|tracking)",
+  "(telemetry|analytics|tracking)[_-]?(enabled|disabled)",
+  "\\bconsent\\b",
+  "anonymous[_-]?id",
+  "identify\\("
+ ],
+ "control_keywords": [
+  "do_not_track",
+  "telemetry",
+  "opt-out",
+  "opt_out",
+  "optout",
+  "opt out",
+  "opt-in",
+  "opt_in",
+  "optin",
+  "opt in",
+  "disable_telemetry",
+  "disabletelemetry",
+  "disable-telemetry",
+  "disable_analytics",
+  "disableanalytics",
+  "disable_tracking",
+  "analytics_enabled",
+  "analyticsenabled",
+  "tracking_enabled",
+  "consent",
+  "anonymous_id",
+  "anonymousid",
+  "anonymous-id",
+  "identify("
+ ],
+ "ignore_hosts": [
+  "localhost",
+  "127.0.0.1",
+  "0.0.0.0",
+  "example.com",
+  "example.org",
+  "example.net",
+  "schema.org",
+  "www.w3.org",
+  "w3.org",
+  "json-schema.org",
+  "xmlns.com",
+  "purl.org",
+  "ns.adobe.com",
+  "apple.com/DTDs",
+  "www.apple.com"
+ ],
+ "ignore_control_lines": [
+  "@[\\w.]*Opt(In|Out)\\b"
+ ]
 }

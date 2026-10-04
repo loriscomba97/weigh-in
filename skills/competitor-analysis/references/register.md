@@ -17,7 +17,7 @@ Analyses produce more than documents: decisions to take, things to do, ideas wor
 
 ## 2. Every entry cites its source
 
-Use a short reference to the analysis and the item, for example `ACME-06 P3`: document 06 of the Acme analysis, item P3. An entry without a source cannot be checked later.
+Use a short reference to the analysis and the item, for example `ACME-06 P3`: document 06 of the Acme analysis, item P3. A quick analysis has one document: cite its section, as in `ACME-00 §5.2`. An entry without a source cannot be checked later.
 
 ## 3. The layout
 

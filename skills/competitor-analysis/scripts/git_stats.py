@@ -9,7 +9,9 @@ Usage:
 Reads history with git log; never writes to the repository. Prints JSON with:
   - commits, merges and non-merge commits, first and last dates;
   - authors by email, with shares of non-merge commits, the top-1 and top-5 shares and a
-    "bus factor": the fewest authors who wrote half of the non-merge commits;
+    "bus factor": the fewest authors who wrote half of the non-merge commits; the same figures with
+    likely duplicate identities merged; bots and assistants that author commits, kept out of the
+    email domains;
   - commits per ISO week;
   - the share of non-merge commits whose subject reads as a fix;
   - version tags with dates and the gaps between releases;
@@ -74,26 +76,38 @@ def read_log(repo: Path, rev: str, since: str, until: str) -> list:
     return commits
 
 
-def authors_summary(commits: list, top: int) -> dict:
+def bus_factor(counts: list, total: int) -> int:
+    """The fewest authors whose commits add up to half of all commits."""
+    running, bus = 0, 0
+    for n in sorted(counts, reverse=True):
+        running += n
+        bus += 1
+        if total and running * 2 >= total:
+            break
+    return bus
+
+
+def authors_summary(commits: list, top: int, bots: list) -> dict:
     counts = Counter()
     names = defaultdict(Counter)
     domains = Counter()
+    automated = Counter()
     for c in commits:
         if c["merge"]:
             continue
         key = author_key(c["name"], c["email"])
         counts[key] += 1
         names[key][c["name"]] += 1
+        if any(b.search(c["name"]) for b in bots):
+            # Bots and assistants that author commits under their own name are not people: their
+            # email domain says who makes the tool, not who works on the project.
+            automated[c["name"]] += 1
+            continue
         domain = c["email"].split("@")[-1].lower() if "@" in c["email"] else "(none)"
         domains["users.noreply.github.com" if domain.endswith("users.noreply.github.com") else domain] += 1
     total = sum(counts.values())
     ranked = counts.most_common()
-    running, bus = 0, 0
-    for _, n in ranked:
-        running += n
-        bus += 1
-        if total and running * 2 >= total:
-            break
+    bus = bus_factor([n for _, n in ranked], total)
     share = lambda n: round(100 * n / total, 1) if total else 0.0
     # The same person often commits under two identities (a work email and a GitHub noreply one).
     # Flag keys whose names fold to the same letters; the analyst decides whether to merge them.
@@ -105,14 +119,25 @@ def authors_summary(commits: list, top: int) -> dict:
             folded = fold(value)
             if len(folded) >= 4:
                 groups[folded].add(key)
-    duplicates = []
+    duplicates, merged_groups = [], []
     for keys in groups.values():
         if len(keys) > 1:
             entry = {"names": sorted({n for k in keys for n in names[k]}), "identities": len(keys),
                      "commits": sum(counts[k] for k in keys)}
             if entry not in duplicates:
                 duplicates.append(entry)
+                merged_groups.append(set(keys))
     duplicates.sort(key=lambda e: -e["commits"])
+    # The same numbers with those identities merged, so shares and the bus factor count people.
+    owner = {}
+    for index, keys in enumerate(merged_groups):
+        for key in keys:
+            owner.setdefault(key, f"group:{index}")
+    merged, merged_names = Counter(), defaultdict(Counter)
+    for key, n in counts.items():
+        merged[owner.get(key, key)] += n
+        merged_names[owner.get(key, key)].update(names[key])
+    merged_ranked = merged.most_common()
     return {
         "distinct_authors": len(counts),
         "authors_with_10_plus": sum(1 for n in counts.values() if n >= 10),
@@ -122,8 +147,16 @@ def authors_summary(commits: list, top: int) -> dict:
         "top5_share_pct": share(sum(n for _, n in ranked[:5])),
         "bus_factor_50": bus,
         "possible_same_person": duplicates,
+        "with_identities_merged": {
+            "top": [{"author": merged_names[k].most_common(1)[0][0], "commits": n, "share_pct": share(n)} for k, n in merged_ranked[:5]],
+            "top1_share_pct": share(merged_ranked[0][1]) if merged_ranked else 0.0,
+            "bus_factor_50": bus_factor([n for _, n in merged_ranked], total),
+        },
+        "automated_authors": dict(automated.most_common(10)),
         "email_domains": dict(domains.most_common(10)),
-        "note": "Authors are keyed by email. Merge the identities in possible_same_person before you quote shares or the bus factor.",
+        "note": ("Authors are keyed by email. with_identities_merged groups the identities in possible_same_person: "
+                 "check those groups, then quote the merged figures. Bots and assistants that author commits are "
+                 "counted in the totals but left out of email_domains."),
     }
 
 
@@ -231,10 +264,13 @@ def main() -> int:
     if not is_git_repo(repo):
         parser.error(f"{repo} is not a git working tree")
     commits = read_log(repo, args.rev, args.since, args.until)
+    signals = load_signals()
+    bot_patterns = [re.compile(b, re.I) for b in signals["bot_author_patterns"]]
     non_merge = [c for c in commits if not c["merge"]]
     fix = re.compile(args.fix_regex, re.I)
     fixes = sum(1 for c in non_merge if fix.search(c["subject"]))
-    dates = sorted(c["date"] for c in commits)
+    # Sort by the instant, not the text: offsets differ between authors, so string order is wrong.
+    ordered = sorted(commits, key=lambda c: parse_iso(c["date"]))
     print_json({
         "repo": str(repo.resolve()),
         "rev": args.rev,
@@ -242,15 +278,15 @@ def main() -> int:
         "window": {"since": args.since or None, "until": args.until or None},
         "taken_at": now_utc(),
         "commits": {"all": len(commits), "merges": len(commits) - len(non_merge), "non_merge": len(non_merge),
-                    "first": dates[0] if dates else None, "last": dates[-1] if dates else None},
-        "authors": authors_summary(commits, args.top),
+                    "first": ordered[0]["date"] if ordered else None, "last": ordered[-1]["date"] if ordered else None},
+        "authors": authors_summary(commits, args.top, bot_patterns),
         "weekly": weekly(commits),
         "fixes": {"non_merge_fix_commits": fixes,
                   "share_pct": round(100 * fixes / len(non_merge), 1) if non_merge else 0.0,
                   "regex": args.fix_regex},
         "releases": releases(repo),
         "hotspots": hotspots(repo, args.rev, args.since, args.until, args.top),
-        "ai_assisted": ai_signals(repo, args.rev, commits, load_signals()),
+        "ai_assisted": ai_signals(repo, args.rev, commits, signals),
     })
     return 0
 

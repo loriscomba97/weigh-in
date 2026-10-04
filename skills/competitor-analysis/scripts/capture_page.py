@@ -25,7 +25,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from common import USER_AGENT, html_title, html_to_text, print_json
+from common import USER_AGENT, decode_body, html_title, html_to_text, print_json
 
 
 def slug_for(url: str) -> str:
@@ -60,6 +60,7 @@ def main() -> int:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     stem = f"{slug_for(args.url)}-{stamp}"
     paths = {ext: args.out_dir / f"{stem}.{ext}" for ext in ("html", "txt", "json")}
+    data = decode_body(data)
     paths["html"].write_bytes(data)
     paths["txt"].write_text(text, encoding="utf-8")
     meta = {

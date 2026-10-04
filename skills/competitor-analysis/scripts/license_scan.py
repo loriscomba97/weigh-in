@@ -2,11 +2,15 @@
 """Map the licenses of a codebase, so you know what you may reuse and on which terms.
 
 Usage:
-  python3 license_scan.py <repo> [--include-vendored]
+  python3 license_scan.py <repo> [--at REV] [--include-vendored]
 
 Reads files and, when the folder is a git clone, the history of its license files. Prints JSON:
-  - license_files: every LICENSE, COPYING, NOTICE, LICENSING and PATENTS file, with the license
-    family recognized from its text and its first copyright line;
+  - vendored_license_files: the license files inside vendored folders (third_party/, vendor/ and
+    similar), which the rest of the scan skips unless --include-vendored is given: they cover the
+    components the product ships from other projects;
+  - license_files: every LICENSE, COPYING, NOTICE, LICENSING and PATENTS file, with its file_type
+    (license, licensing note, notice, patents), the license family recognized from its text and its
+    first copyright line; only license files feed the flags;
   - spdx_headers: SPDX-License-Identifier lines, counted by identifier and by top-level folder;
   - manifests: the license each package manifest declares (package.json, Cargo.toml,
     pyproject.toml, setup.cfg, composer.json, *.gemspec, *.podspec);
@@ -26,8 +30,9 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+from typing import Optional
 
-from common import SKIP_DIRS, git, is_git_repo, iter_files, print_json, read_text, rel
+from common import SKIP_DIRS, git, is_git_repo, iter_files, iter_vendored, print_json, read_text, rel, tree_at
 
 LICENSE_NAME = re.compile(r"^(licen[cs]e|copying|notice|licensing|patents|unlicense)([._-].*)?$", re.I)
 CODE_SUFFIXES = {".py", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".go", ".rs", ".json", ".yml", ".yaml", ".toml", ".sh",
@@ -74,6 +79,16 @@ LOCKFILES = {
 
 def recognize(text: str) -> dict:
     lower = re.sub(r"\s+", " ", text.lower())
+    # The title at the top decides first: an MPL text names the AGPL among its secondary licenses,
+    # so matching phrases anywhere in the file would call it AGPL.
+    first = next((line.strip().lstrip("#").strip().lower() for line in text.splitlines() if line.strip()), "")
+    first = first[4:] if first.startswith("the ") else first
+    for family, kind, phrases in LICENSES:
+        if first.startswith(phrases[0]) and family not in ("Proprietary or custom", "BSD-2-Clause", "BSD-3-Clause"):
+            result = {"family": family, "kind": kind}
+            if family == "GPL":
+                result["version"] = "3" if "version 3" in lower else ("2" if "version 2" in lower else None)
+            return result
     for family, kind, phrases in LICENSES:
         if all(p in lower for p in phrases):
             result = {"family": family, "kind": kind}
@@ -85,6 +100,19 @@ def recognize(text: str) -> dict:
     if "source-available" in lower or "source available" in lower or "license key" in lower:
         return {"family": "Proprietary or custom", "kind": "custom terms, read in full"}
     return {"family": "Unrecognized", "kind": "read in full"}
+
+
+def file_type(name: str) -> str:
+    """LICENSE and COPYING files hold licenses; LICENSING, NOTICE and PATENTS files explain or attribute.
+    Only license files feed the flags, so an explanatory note never reads as a license of its own."""
+    lower = name.lower()
+    if lower.startswith("licensing"):
+        return "licensing note"
+    if lower.startswith("notice"):
+        return "notice"
+    if lower.startswith("patents"):
+        return "patents"
+    return "license"
 
 
 def copyright_line(text: str):
@@ -144,7 +172,7 @@ def lockfile_entries(name: str, text: str) -> int:
     return 0
 
 
-def scan(root: Path, include_vendored: bool) -> dict:
+def scan(root: Path, include_vendored: bool, history_repo: Optional[Path] = None, rev: str = "HEAD") -> dict:
     skip = set() if include_vendored else SKIP_DIRS
     license_files, contrib = [], []
     spdx_by_id, spdx_by_area = Counter(), defaultdict(Counter)
@@ -155,7 +183,7 @@ def scan(root: Path, include_vendored: bool) -> dict:
         name = path.name
         if LICENSE_NAME.match(name) and path.suffix.lower() not in CODE_SUFFIXES:
             text = read_text(path) or ""
-            license_files.append({"path": relative, **recognize(text), "copyright": copyright_line(text)})
+            license_files.append({"path": relative, "file_type": file_type(name), **recognize(text), "copyright": copyright_line(text)})
             continue
         if CONTRIB_NAME.match(name):
             text = read_text(path) or ""
@@ -180,17 +208,26 @@ def scan(root: Path, include_vendored: bool) -> dict:
                 spdx_by_id[match.group(1).strip()] += 1
                 spdx_by_area[relative.split("/")[0] if "/" in relative else "(root)"][match.group(1).strip()] += 1
 
+    vendored = []
+    if not include_vendored:
+        for path in iter_vendored(root):
+            if LICENSE_NAME.match(path.name) and path.suffix.lower() not in CODE_SUFFIXES:
+                found = recognize(read_text(path) or "")
+                vendored.append({"path": rel(path, root), "family": found["family"]})
+
     history = {}
-    if is_git_repo(root):
+    source = history_repo or root
+    if is_git_repo(source):
         for item in license_files:
             if "/" not in item["path"]:
-                log = git(root, "log", "--follow", "--format=%h%x1f%aI%x1f%s", "--", item["path"], check=False)
+                log = git(source, "log", rev, "--follow", "--format=%h%x1f%aI%x1f%s", "--", item["path"], check=False)
                 history[item["path"]] = [dict(zip(("commit", "date", "subject"), line.split("\x1f"))) for line in log.splitlines() if line]
 
-    families = {f["family"] for f in license_files if f["family"] not in ("Unrecognized",)}
-    root_license = [f for f in license_files if "/" not in f["path"] and f["path"].lower().startswith(("licen", "copying"))]
+    families = {f["family"] for f in license_files if f["file_type"] == "license" and f["family"] != "Unrecognized"}
+    root_license = [f for f in license_files if "/" not in f["path"] and f["file_type"] == "license"]
     return {
         "license_files": license_files,
+        "vendored_license_files": vendored,
         "spdx_headers": {"by_identifier": dict(spdx_by_id.most_common()), "by_area": {a: dict(c) for a, c in spdx_by_area.items()}},
         "manifests": manifests,
         "lockfiles": lockfiles,
@@ -208,12 +245,16 @@ def scan(root: Path, include_vendored: bool) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("repo")
+    parser.add_argument("--at", help="scan this branch, tag or commit instead of the working tree, without a checkout")
     parser.add_argument("--include-vendored", action="store_true", help="also read vendored and dependency folders")
     args = parser.parse_args()
     root = Path(args.repo)
+    with tree_at(root, args.at) as tree:
+        result = scan(tree, args.include_vendored, history_repo=root, rev=args.at or "HEAD")
     print_json({
         "repo": str(root.resolve()),
-        **scan(root, args.include_vendored),
+        "at": args.at or "working tree",
+        **result,
         "next_steps": [
             "Read every license and NOTICE in full; key phrases only point at the family.",
             "For the dependency licenses, run a scanner for the ecosystem (for example license-checker, cargo-deny, pip-licenses or ScanCode).",

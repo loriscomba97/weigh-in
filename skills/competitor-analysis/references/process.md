@@ -85,7 +85,7 @@ Only after the user's approval, and only where they say. For Notion and other wo
 
 ## Variants
 
-**Quick.** One or two tracks, one document with these sections: in short; who they are; what they do and for whom; license; where they stand against you; what to do; what I could not verify. Register entries as usual.
+**Quick.** One or two tracks and one document, `00-quick-analysis.md`, with the sections in [deliverables.md](deliverables.md) (section 7). Pick the tracks that answer the question that triggered the analysis; when nothing is specific, take business and traction plus the technical core, and add the license and trust facts the scripts produce. Register entries as usual. When an earlier analysis exists and the user asks for something quick, run a **quick update**: the same document, plus a "What changed" table.
 
 **Update.** Start from the earlier analysis. Re-run the scripts at the new snapshot and diff the numbers. Every document gets a "What changed" section (a table: item, before with date, now with date, why it matters) and a "Corrections to the earlier analysis" section. Update the register entries that the changes touch.
 

@@ -9,4 +9,5 @@ First public release.
 - **Fourteen scripts.** Python 3.9 or later, standard library only. They read repositories, history, licenses, telemetry, app hardening, dependency versions, GitHub traction, registry and community counts, and web pages, and print JSON. Two more convert and split documents for Notion, and one checks the wording of public copy.
 - **Repository tooling.** A validator for the Agent Skills format and the house style, a public-safety scan for commits and pushes, and CI on Python 3.9 and 3.14.
 - **An example you can run in a minute.** `docs/example/make_acme.py` builds Acme Notes, a fictional competitor with planted problems, and `docs/example.md` shows what the scripts find and the analysis they lead to.
+- **Tested end to end before release.** An agent ran the skill on a real open-source project, blind to an earlier analysis of it. The problems it found (in dates, identities, release windows, license recognition, archived pages, dependency coverage and the quick variant) are fixed, and each one has a regression test.
 - **Tests.** Throwaway git repositories, fixtures and saved API responses; no network. The example's numbers are tested too.

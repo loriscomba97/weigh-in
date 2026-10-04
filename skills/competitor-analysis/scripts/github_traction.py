@@ -4,7 +4,7 @@
 Usage:
   python3 github_traction.py owner/repo [--releases-repo owner/other] [--check-interval-hours 1]
                              [--star-history 12] [--max-release-pages 5] [--save raw/] [--offline raw/]
-                             [--no-search]
+                             [--no-search] [--no-owner-scan]
 
 Reads the public GitHub REST API with GET requests only. Unauthenticated calls are limited
 (60 an hour, 10 searches a minute); set GITHUB_TOKEN in the environment to raise the limit.
@@ -17,7 +17,11 @@ Prints JSON with:
   - the number of contributors GitHub lists (it counts linked accounts, not people);
   - every release asset classified as installer (with a stable or versioned file name),
     update check, update delta, checksum or signature, package, archive or other, per platform;
-  - per-release windows: installers per day and update checks per day;
+  - per-release windows: installers per day and update checks per day, over the releases that carry
+    update-check files (a mobile-only release does not reset the desktop updaters);
+  - signs that releases live elsewhere too: the owner's other public repositories whose names suggest
+    releases, and a first release much later than the repository's creation (one more API call;
+    --no-owner-scan skips it);
   - with --check-interval-hours H, an estimate of copies running at once:
     update checks per day * H / 24. It is an estimate; say so wherever you quote it;
   - with --star-history N, star milestones and their dates from N sampled pages of the stargazer
@@ -90,6 +94,9 @@ def classify_asset(name: str, tag: str = "") -> dict:
     versioned = bool(VERSION_IN_NAME.search(name)) or (bool(tag) and tag.lstrip("v") in name)
     if UPDATE_CHECK.search(name):
         category = "update-check"
+        if lower == "latest.yml":
+            # electron-updater names the Windows feed latest.yml; macOS and Linux carry a suffix.
+            return {"category": category, "platform": "windows", "versioned_name": versioned}
     elif UPDATE_DELTA.search(name):
         category = "update-delta"
     elif CHECKSUM.search(name):
@@ -188,7 +195,10 @@ def release_windows(releases: list, now: datetime) -> list:
     """Each release is "the latest" from its publish date until the next one. Update checks on its
     assets accrue in that window, so checks per day approximate the copies checking per day."""
     rows = []
-    published = merge_by_tag(releases)
+    # Only releases that carry update-check files move the "latest" pointer for running copies.
+    # A mobile-only release in between would cut a desktop window short with zero checks.
+    published = [r for r in merge_by_tag(releases)
+                 if any(classify_asset(a["name"], r["tag_name"])["category"] == "update-check" for a in r["assets"])]
     for i, r in enumerate(published):
         start = parse_iso(r["published_at"])
         end = parse_iso(published[i + 1]["published_at"]) if i + 1 < len(published) else now
@@ -234,9 +244,12 @@ def summarize_releases(releases: list, check_interval_hours: Optional[float], no
             "copies_running_at_once": round(checks / days * check_interval_hours / 24) if days else None,
             "basis": "the last five closed release windows of at least half a day; copies = checks per day * interval / 24",
         }
+    without_checks = [r["tag_name"] for r in merge_by_tag(releases)
+                      if not any(classify_asset(a["name"], r["tag_name"])["category"] == "update-check" for a in r["assets"])]
     return {
         "release_entries": len(releases),
         "versions": len(merge_by_tag(releases)),
+        "versions_without_update_checks": without_checks,
         "assets_total_downloads": total,
         "by_category": dict(by_category.most_common()),
         "by_platform": {p: dict(c.most_common()) for p, c in sorted(by_platform.items())},
@@ -292,6 +305,31 @@ def star_history(client: "Client", repo: str, stars: Optional[int], samples: int
     }
 
 
+def releases_elsewhere(client: "Client", repo: str, created_at: Optional[str], releases: list, known: list) -> dict:
+    """Clues that some releases are published in another repository, such as an older mirror."""
+    owner, name = repo.split("/", 1)
+    body, _ = client.get(f"/users/{owner}/repos", {"per_page": 100, "sort": "updated"}, tolerate=(404,))
+    candidates = None
+    if body is not None:
+        stem = re.sub(r"[^a-z0-9]", "", name.lower())
+        candidates = []
+        for item in body:
+            other = item.get("name", "")
+            folded = re.sub(r"[^a-z0-9]", "", other.lower())
+            if item.get("full_name") in (repo, *known) or folded == stem:
+                continue
+            if "release" in folded or (len(stem) >= 4 and (stem in folded or folded in stem)):
+                candidates.append({"repo": item.get("full_name"), "description": item.get("description"), "pushed_at": item.get("pushed_at")})
+    warning = None
+    dates = sorted(r["published_at"] for r in releases if r.get("published_at"))
+    if created_at and dates:
+        gap = (parse_iso(dates[0]) - parse_iso(created_at)).days
+        if gap > 14:
+            warning = (f"The first release read is {dates[0][:10]}, {gap} days after the repository was created: earlier "
+                       "releases may live in another repository. Check the updater's feed and pass --releases-repo.")
+    return {"other_repositories": candidates, "warning": warning}
+
+
 def fetch_releases(client: Client, repo: str, max_pages: int) -> list:
     releases = []
     for page in range(1, max_pages + 1):
@@ -310,6 +348,7 @@ def main() -> int:
     parser.add_argument("--max-release-pages", type=int, default=5, help="pages of 100 releases to read per repository")
     parser.add_argument("--star-history", type=int, default=0, metavar="N", help="sample N pages of stargazers to date star milestones")
     parser.add_argument("--no-search", action="store_true", help="skip the search API calls (issues and pull requests)")
+    parser.add_argument("--no-owner-scan", action="store_true", help="skip the look for other repositories that host releases")
     parser.add_argument("--save", type=Path, help="folder to save every API response in")
     parser.add_argument("--offline", type=Path, help="folder of saved responses to read instead of the network")
     args = parser.parse_args()
@@ -341,17 +380,20 @@ def main() -> int:
     releases = []
     for name in [args.repo, *args.releases_repo]:
         releases.extend(fetch_releases(client, name, args.max_release_pages))
+    elsewhere = None if args.no_owner_scan else releases_elsewhere(client, args.repo, facts.get("created_at"), releases, args.releases_repo)
     print_json({
         "taken_at": now_utc(),
         "repo": facts,
         "contributors_listed": contributors,
         "issues_and_prs": issues,
         "release_repos": [args.repo, *args.releases_repo],
+        "releases_elsewhere": elsewhere,
         "release_downloads": summarize_releases(releases, args.check_interval_hours, datetime.now(timezone.utc)),
         "star_history": star_history(client, args.repo, facts["stars"], args.star_history) if args.star_history else None,
         "notes": [
             "Download counts are lifetime totals per asset; they include bots, mirrors and retries.",
             "Update checks measure running copies, not people. Installers with a stable name are the cleanest count of new installs.",
+            "Versioned Windows installers are also fetched by updaters as full updates, so they mix installs and updates.",
             "Stars measure attention, not use. Quote every number with this run's date.",
         ],
         "api_calls": client.calls,

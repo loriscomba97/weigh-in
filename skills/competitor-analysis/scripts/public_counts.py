@@ -16,6 +16,8 @@ Every option is repeatable. GET requests only, one at a time, no credentials. Pr
   - Open VSX: all-time downloads, rating and reviews;
   - Discord: approximate members and members online, read from a public invite code.
 Downloads count machines, CI runs, mirrors and caches as well as people; members count accounts.
+For npm, PyPI and crates.io the output also carries the repository the package declares: check that
+it is the competitor's before you quote the numbers, since names can be taken by anyone.
 Quote every number with this run's date and say what it measures.
 --save writes every response to a folder, and --offline reads them back, so a run can be audited.
 """
@@ -37,8 +39,10 @@ from common import USER_AGENT, now_utc, print_json
 SOURCES = {
     "npm": ["https://api.npmjs.org/downloads/point/last-day/{name}",
             "https://api.npmjs.org/downloads/point/last-week/{name}",
-            "https://api.npmjs.org/downloads/point/last-month/{name}"],
-    "pypi": ["https://pypistats.org/api/packages/{name}/recent"],
+            "https://api.npmjs.org/downloads/point/last-month/{name}",
+            "https://registry.npmjs.org/{name}/latest"],
+    "pypi": ["https://pypistats.org/api/packages/{name}/recent",
+             "https://pypi.org/pypi/{name}/json"],
     "crate": ["https://crates.io/api/v1/crates/{name}"],
     "brew": ["https://formulae.brew.sh/api/formula/{name}.json"],
     "cask": ["https://formulae.brew.sh/api/cask/{name}.json"],
@@ -88,17 +92,23 @@ def summarize(kind: str, name: str, bodies: list) -> dict:
     if errors:
         return {"error": errors[0]}
     if kind == "npm":
-        day, week, month = bodies
+        day, week, month, *meta = bodies
+        repository = (meta[0].get("repository") if meta else None) or {}
         return {"downloads_last_day": day.get("downloads"), "downloads_last_week": week.get("downloads"),
-                "downloads_last_month": month.get("downloads"), "period_end": month.get("end")}
+                "downloads_last_month": month.get("downloads"), "period_end": month.get("end"),
+                "repository": repository.get("url") if isinstance(repository, dict) else repository}
     if kind == "pypi":
         data = bodies[0].get("data") or {}
+        info = (bodies[1].get("info") or {}) if len(bodies) > 1 else {}
+        urls = info.get("project_urls") or {}
+        repository = next((v for k, v in urls.items() if k.lower() in ("source", "repository", "code", "source code", "github")), None)
         return {"downloads_last_day": data.get("last_day"), "downloads_last_week": data.get("last_week"),
-                "downloads_last_month": data.get("last_month")}
+                "downloads_last_month": data.get("last_month"), "repository": repository or info.get("home_page") or None}
     if kind == "crate":
         crate = bodies[0].get("crate") or {}
         return {"downloads_all_time": crate.get("downloads"), "downloads_last_90_days": crate.get("recent_downloads"),
-                "latest_version": crate.get("max_stable_version") or crate.get("newest_version"), "updated_at": crate.get("updated_at")}
+                "latest_version": crate.get("max_stable_version") or crate.get("newest_version"), "updated_at": crate.get("updated_at"),
+                "repository": crate.get("repository")}
     if kind in ("brew", "cask"):
         installs = (bodies[0].get("analytics") or {}).get("install") or {}
         out = {}

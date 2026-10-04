@@ -4,7 +4,7 @@ A comparison that skips your own weak points cannot support a decision. Read you
 
 ## 1. Read it the same way
 
-- **Read only,** on the main branch and on the branches going into the next release. Record the commits in the document header, as you do for the competitor.
+- **Read only,** on the main branch and on the branches going into the next release: the scanners take `--at <branch>`, so you never need a checkout. Record the commits in the document header, as you do for the competitor.
 - **Run the same scripts on your repository:**
   - `scripts/loc_count.py` and `scripts/git_stats.py`: size, growth, cadence, bus factor. Your own bus factor is often the most uncomfortable number in the analysis;
   - `scripts/telemetry_scan.py`: verifies or refutes any "no telemetry" claim you make;

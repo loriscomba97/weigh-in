@@ -3,15 +3,16 @@
 control them, and every external host the code mentions.
 
 Usage:
-  python3 telemetry_scan.py <repo> [--include-tests] [--include-docs] [--max-hits 8]
+  python3 telemetry_scan.py <repo> [--at REV] [--include-tests] [--include-docs] [--max-hits 8] [--max-hosts 60]
 
 Reads files only. Signatures live in telemetry_signatures.json. Prints JSON with:
   - sdks: each SDK found, its kind, and the files and lines that mention it. "strength" is
     "usage" when a line imports, initializes or loads it, and "mention only" when the code just
     names the vendor's domain, as an integration catalog or a docs link does;
   - controls: lines that look like consent, opt-out or telemetry switches;
-  - hosts: every external host in the code, with how many files mention it and an example,
-    known telemetry hosts flagged.
+  - hosts: the external hosts in the code, with how many files mention each and an example:
+    every known telemetry host, then the most mentioned others up to --max-hosts (hosts_total
+    says how many there were; --max-hosts 0 lists them all).
 Everything here is a signal, not a finding. Confirm each one by reading the code path: does it
 run by default, before any consent, and what does it send, with which identity? Then compare
 the answer with the product's privacy policy.
@@ -25,7 +26,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from common import iter_files, print_json, read_text, rel
+from common import is_test_path, iter_files, print_json, read_text, rel, tree_at
 
 TEXT_EXT = {
     ".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".mts", ".cts", ".py", ".go", ".rs", ".java", ".kt", ".kts",
@@ -34,7 +35,6 @@ TEXT_EXT = {
     ".sh", ".ps1", ".lua", ".ex", ".exs",
 }
 DOC_EXT = {".md", ".mdx", ".rst", ".txt", ".adoc"}
-TEST_PATH = re.compile(r"(^|/)(__tests__|tests?|spec|specs|e2e|fixtures|testdata|mocks?|__mocks__)(/|$)|\.(test|spec)\.[a-z]+$", re.I)
 URL = re.compile(r"https?://([A-Za-z0-9.-]+\.[A-Za-z]{2,})(?::\d+)?")
 
 
@@ -59,6 +59,7 @@ def scan(root: Path, include_tests: bool, include_docs: bool, max_hits: int) -> 
     signatures = load_signatures()
     sdks = [(s, [re.compile(p, re.I) for p in s["patterns"]]) for s in signatures["sdks"]]
     controls = [re.compile(p, re.I) for p in signatures["controls"]]
+    not_controls = [re.compile(p) for p in signatures.get("ignore_control_lines", [])]
     # Plain substring checks screen each file and line; the regular expressions run only where a
     # keyword appears. This keeps a scan of a large monorepo to seconds.
     sdk_keywords = [(sdk, patterns, [k.lower() for k in sdk.get("keywords", [])]) for sdk, patterns in sdks]
@@ -79,7 +80,7 @@ def scan(root: Path, include_tests: bool, include_docs: bool, max_hits: int) -> 
         is_doc = suffix in DOC_EXT
         if not (suffix in TEXT_EXT or name in ("package.json", "podfile", "gemfile", "cargo.toml", "go.mod") or (include_docs and is_doc)):
             continue
-        if not include_tests and TEST_PATH.search(relative):
+        if not include_tests and is_test_path(relative):
             continue
         if name.endswith((".min.js", ".map")) or name in ("package-lock.json", "pnpm-lock.yaml", "yarn.lock"):
             continue
@@ -104,7 +105,8 @@ def scan(root: Path, include_tests: bool, include_docs: bool, max_hits: int) -> 
                             sdk_usage.add(sdk["name"])
                         if len(sdk_hits[sdk["name"]]) < max_hits:
                             sdk_hits[sdk["name"]].append({"file": relative, "line": number, "match": strength, "text": line.strip()[:160]})
-                if want_controls and any(k in low for k in control_keywords) and any(p.search(line) for p in controls):
+                if (want_controls and any(k in low for k in control_keywords) and any(p.search(line) for p in controls)
+                        and not any(p.search(line) for p in not_controls)):
                     control_hits.append({"file": relative, "line": number, "text": line.strip()[:160]})
                     want_controls = len(control_hits) < max_hits * 6
         if "://" in text:
@@ -141,14 +143,24 @@ def scan(root: Path, include_tests: bool, include_docs: bool, max_hits: int) -> 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("repo")
+    parser.add_argument("--at", help="scan this branch, tag or commit instead of the working tree, without a checkout")
     parser.add_argument("--include-tests", action="store_true", help="also scan tests, fixtures and mocks")
     parser.add_argument("--include-docs", action="store_true", help="also scan Markdown and other docs")
     parser.add_argument("--max-hits", type=int, default=8, help="example lines kept per SDK")
+    parser.add_argument("--max-hosts", type=int, default=60, help="hosts listed besides telemetry hosts; 0 lists all")
     args = parser.parse_args()
     root = Path(args.repo)
-    result = scan(root, args.include_tests, args.include_docs, args.max_hits)
+    with tree_at(root, args.at) as tree:
+        result = scan(tree, args.include_tests, args.include_docs, args.max_hits)
+    hosts = result["hosts"]
+    result["hosts_total"] = len(hosts)
+    if args.max_hosts:
+        flagged = [h for h in hosts if h["telemetry"]]
+        others = [h for h in hosts if not h["telemetry"]][: args.max_hosts]
+        result["hosts"] = flagged + others
     print_json({
         "repo": str(root.resolve()),
+        "at": args.at or "working tree",
         **result,
         "how_to_confirm": [
             "Open the file where each SDK is initialized: does it run by default, and before any consent screen?",

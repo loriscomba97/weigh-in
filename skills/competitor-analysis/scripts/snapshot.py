@@ -2,10 +2,12 @@
 """Pin the snapshot an analysis refers to: clone a repository when given a URL, then record it.
 
 Usage:
-  python3 snapshot.py https://github.com/owner/repo --dest work/repo
+  python3 snapshot.py https://github.com/owner/repo --dest work/repo [--timeout 1800]
   python3 snapshot.py path/to/an/existing/clone
 
-With a URL, clones the full history into --dest, which must not exist yet. With a path, reads
+With a URL, clones the full history into --dest, which must not exist yet, and gives up after
+--timeout seconds. Git LFS content is not downloaded (the pointers are enough to read the code, and
+the rules say no binaries without approval); the output says when the repository uses LFS. With a path, reads
 the clone as it is: no fetch, no checkout, no reset. Prints JSON with the remote, the HEAD
 commit and its date, the branch, the default branch, the counts of commits, branches and tags,
 the first commit date, whether the working tree has local changes, and the time of the snapshot.
@@ -19,6 +21,7 @@ Clone again without those options for the analysis.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -59,17 +62,24 @@ def clone_kind(repo: Path) -> dict:
     shallow = git(repo, "rev-parse", "--is-shallow-repository", check=False).strip() == "true"
     partial = git(repo, "config", "--get", "remote.origin.partialclonefilter", check=False).strip() or None
     warnings = []
+    attributes = git(repo, "show", "HEAD:.gitattributes", check=False)
+    uses_lfs = "filter=lfs" in attributes
+    if uses_lfs:
+        warnings.append("The repository stores some files in Git LFS; they are pointers here, which is enough to read the code.")
     if shallow:
         warnings.append("Shallow clone: history stops early, so commit counts, authors and growth are incomplete.")
     if partial:
         warnings.append(f"Partial clone ({partial}): git fetches missing objects while scripts read them, or fails offline.")
-    return {"shallow": shallow, "partial_clone_filter": partial, "warnings": warnings}
+    size = sum(f.stat().st_size for f in repo.rglob("*") if f.is_file() and not f.is_symlink())
+    return {"shallow": shallow, "partial_clone_filter": partial, "uses_lfs": uses_lfs,
+            "disk_mb": round(size / 1_000_000, 1), "warnings": warnings}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("source", help="repository URL to clone, or path to an existing clone")
     parser.add_argument("--dest", help="where to clone a URL; must not exist yet")
+    parser.add_argument("--timeout", type=int, default=1800, help="seconds before a clone is abandoned")
     args = parser.parse_args()
 
     if looks_like_url(args.source):
@@ -78,7 +88,13 @@ def main() -> int:
         dest = Path(args.dest)
         if dest.exists():
             parser.error(f"{dest} already exists; pass the existing clone as the source instead")
-        result = subprocess.run(["git", "clone", "--quiet", args.source, str(dest)], capture_output=True, text=True)
+        env = {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1", "GIT_TERMINAL_PROMPT": "0"}
+        try:
+            result = subprocess.run(["git", "clone", "--quiet", args.source, str(dest)], capture_output=True, text=True,
+                                    env=env, timeout=args.timeout)
+        except subprocess.TimeoutExpired:
+            print(f"git clone did not finish in {args.timeout} seconds; the partial folder {dest} can be deleted.", file=sys.stderr)
+            return 1
         if result.returncode != 0:
             print(result.stderr.strip(), file=sys.stderr)
             return 1
