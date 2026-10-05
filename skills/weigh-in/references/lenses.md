@@ -45,14 +45,17 @@ Lands in: 04 and 06. Details in [licensing.md](licensing.md).
 
 Lands in: 01 and 00. Details in [numbers.md](numbers.md).
 
-## 6. The business
+## 6. The business model
 
 - The price list, and how they really earn.
+- What they give away and what they charge for, and why each paywall sits where it does.
+- What is open and what is closed, and how the paid layer is switched on.
+- Where a free user becomes a customer, and what the competitor subsidizes to get there.
 - Estimated economics: always inference, with the calculation and the source of every list price used.
 - The company: who owns it, who funds it, who owns the marks and the IP.
 - What their investors need from them next (inference), and how that shapes their moves.
 
-Lands in: 01 and 07.
+Lands in: 01, 07 and 08.
 
 ## 7. Trust
 

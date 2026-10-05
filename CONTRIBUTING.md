@@ -1,6 +1,6 @@
 # Contributing
 
-Useful contributions include signatures for SDKs and assistants the scripts miss, reproducible false alarms, rules for new release file types, license phrases, and mistakes worth adding to the pitfalls. Include a small example that shows the issue: a file, a repository layout, an API response.
+Useful contributions include signatures for SDKs, assistants and payment or licensing providers the scripts miss, reproducible false alarms, rules for new release file types, license phrases, and mistakes worth adding to the pitfalls. Include a small example that shows the issue: a file, a repository layout, an API response.
 
 ## How the repository is built
 

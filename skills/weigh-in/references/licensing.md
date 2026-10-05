@@ -13,7 +13,7 @@ The scan lists every LICENSE, COPYING, NOTICE, LICENSING and PATENTS file with t
 Recognition is by key phrases. Then:
 
 - **Read the full text** of every license that is not a well-known one, and of every license in a subfolder.
-- **One repository, several licenses** is common: an open core under a permissive license, an `enterprise/` or `ee/` folder under a commercial one, a component under copyleft. Map each folder.
+- **One repository, several licenses** is common: an open core under a permissive license, an `enterprise/` or `ee/` folder under a commercial one, a component under copyleft. Map each folder. How the paid layer is switched on, and what it sells, is track 5 ([business-model.md](business-model.md)).
 - **Manifests can disagree** with the license files. The license file usually governs; note the mismatch.
 - **Relicensing shows in history:** the commits that changed the license files, and the announcement. Note whether old releases keep the old license, which they usually do.
 - **Third-party components** have their own licenses. `vendored_license_files` lists the license files in vendored folders (`third_party/`, `vendor/`), which the rest of the scan skips; `--include-vendored` scans them in full. For components installed by a package manager, find the shipped version with `scripts/dependency_versions.py` and read the license at that version.

@@ -40,13 +40,14 @@ Templates for the header and for the appendix note are in [templates.md](templat
 | # | Document | Holds |
 |---|---|---|
 | 00 | **Summary for the decision maker** | Readable in five minutes. The answer in three lines; who they are, in numbers; their technology and where it comes from; licenses; where they beat you and where you beat them; uncomfortable truths about you; what to do before the next deadline, in the weeks after and later; decisions, each with a default; where to read the rest. It answers the ten questions in SKILL.md |
-| 01 | **Company, product, business** | Company and people; public numbers; product and editions; price list and revenue model; measured traction; reception; market and positioning; what changed and corrections to the earlier analysis |
+| 01 | **Company, product, business** | Company and people; public numbers; product and editions; the price list (the model is in 08); measured traction; reception; market and positioning; what changed and corrections to the earlier analysis |
 | 02 | **Architecture and stack** | The map; size and growth; data, keys, updates, signing; the product in the code; how they work (CI, tests, cadence, people, agent-assisted development); the paid layer; telemetry; security; quality; strengths and weaknesses against you |
 | 03 | **The technical core** | The layer where you collide, on your axes; the head-to-head with evidence levels; how they achieve their headline capability; ideas to take; what not to copy |
 | 04 | **Licenses and dependencies** | The map; clauses of non-standard licenses; license changes; contribution terms; third-party components; the "can we do this?" table; obligations; positions compared; risks; questions for counsel |
 | 05 | **Your product side by side** | The answers to the same need; technology and business row by row; platform or framework by framework when it matters; the balance; what not to say; uncomfortable truths; scenarios |
 | 06 | **Technical plan** | The principle; work packages before the deadline, at 30 days, at 90 days and later, each with owner and effort; what to take, item by item, with its license path; what not to copy; quick experiments, each with its success criterion |
 | 07 | **Strategy and moves** | The picture in five sentences; positioning; what to say and with which proof; the FAQ; the comparison page; coexistence; pricing; what to watch; risks; decisions |
+| 08 | **Business model and pricing** | Their model in one table (layers, licenses, who pays, how much); free and paid, with the reason for each paywall; open and closed, and how the paid layer is switched on; integrations and partners; where they earn and where they convert; what changed; your model on the same rows; the levers you can and cannot use; proposals with defaults; what not to say. Method in [business-model.md](business-model.md) |
 
 ## 4. The appendices
 

@@ -122,6 +122,45 @@ Detail with every citation in `appendices/<X>.md` (quick variant: in the scratch
 *Sources: <pages and dates>. Condition: <what must be true before publishing>.*
 ```
 
+## Free and paid
+
+```markdown
+| Capability | Free | <Plan> | <Plan> | <Team plan> | <Enterprise or self-hosted> |
+|---|---|---|---|---|---|
+| <capability> | <what each plan gets, with the unit and the allowance> | | | | |
+```
+
+Below the table, one line per paywall: "<paywall>: <why it sits there> (inference)".
+
+## Open and closed
+
+```markdown
+| Component | License | Where the code lives | Who runs it | Evidence |
+|---|---|---|---|---|
+| <component> | <SPDX or "source-available, key required"> | <folder, private repository, binary> | <user, vendor> | <`file:line` or URL, date> |
+```
+
+## The path to paying
+
+```markdown
+| Step | How | Evidence |
+|---|---|---|
+| Arrival | <content, search, community> | <URL, date> |
+| First run | <account, email, analytics default> | <`file:line`> |
+| Offer | <where and when the offer appears, with its price> | <`file:line`> |
+| Reasons to pay | <the pain the paid plan removes> | <URL> |
+| Expansion | <seats, add-ons, tiers> | <URL> |
+| Other businesses | <white-label, OEM, API> | <URL> |
+```
+
+## Levers against yours
+
+```markdown
+| Lever | <Competitor> | <Your product> today | Judgment |
+|---|---|---|---|
+| <license, hosting, free tier, paid value for one person, for a team, enterprise, other businesses, vendors, conversion, trust> | <what they do, with evidence> | <what you do or plan, with the file> | <can you use this lever? what follows> |
+```
+
 ## Register rows
 
 ```markdown

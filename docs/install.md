@@ -39,7 +39,7 @@ You can also ask in plain words:
 
 | Request | What the skill does |
 |---|---|
-| "Analyze Acme against our product and tell me what to decide." | A full analysis: kickoff, four tracks, eight documents, register entries |
+| "Analyze Acme against our product and tell me what to decide." | A full analysis: kickoff, five tracks, nine documents, register entries |
 | "Acme just launched X. What does it mean for us?" | A quick analysis focused on the new feature |
 | "Update last month's Acme analysis." | An update: what changed, and corrections |
 | "Can we reuse Acme's parser? Check the license." | The licenses track and the "can we do this?" table |

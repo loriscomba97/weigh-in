@@ -1,0 +1,55 @@
+{
+  "_about": "Signatures monetization_scan.py looks for in a codebase. A hit is a signal to confirm by reading the code: does the gate really run in the shipped build, what does it unlock, what does the offer say and when does it appear? Strength is 'strong' for imports, calls, keys and comparisons, 'weak' for words that also appear in catalogs and comments. Extend the lists freely.",
+  "billing": [
+    {"name": "Stripe", "patterns": ["@stripe/stripe-js", "@stripe/react-stripe-js", "\"stripe\"\\s*:", "require\\(\\s*[\"']stripe[\"']\\s*\\)", "from\\s+[\"']stripe[\"']", "^\\s*import stripe\\b", "api\\.stripe\\.com", "checkout\\.stripe\\.com", "js\\.stripe\\.com", "buy\\.stripe\\.com", "billing\\.stripe\\.com"]},
+    {"name": "Paddle", "patterns": ["@paddle/paddle-js", "@paddle/paddle-node-sdk", "paddle-python-sdk", "cdn\\.paddle\\.com", "api\\.paddle\\.com", "Paddle\\.(Setup|Initialize)\\s*\\("]},
+    {"name": "Lemon Squeezy", "patterns": ["@lemonsqueezy/", "api\\.lemonsqueezy\\.com", "[a-z0-9-]+\\.lemonsqueezy\\.com/(checkout|buy)"]},
+    {"name": "Polar", "patterns": ["@polar-sh/", "api\\.polar\\.sh", "(buy|sandbox-api)\\.polar\\.sh"]},
+    {"name": "Chargebee", "patterns": ["chargebee-typescript", "\"chargebee\"\\s*:", "[a-z0-9-]+\\.chargebee\\.com"]},
+    {"name": "Recurly", "patterns": ["recurly-js", "\"recurly\"\\s*:", "v3\\.recurly\\.com"]},
+    {"name": "RevenueCat", "patterns": ["react-native-purchases", "purchases_flutter", "api\\.revenuecat\\.com", "Purchases\\.configure\\s*\\("]},
+    {"name": "Braintree", "patterns": ["braintree-web", "\"braintree\"\\s*:", "api\\.braintreegateway\\.com"]},
+    {"name": "PayPal", "patterns": ["@paypal/", "paypal\\.com/sdk/js", "api-m\\.paypal\\.com"]},
+    {"name": "Razorpay", "patterns": ["\"razorpay\"\\s*:", "checkout\\.razorpay\\.com", "api\\.razorpay\\.com"]},
+    {"name": "Dodo Payments", "patterns": ["\"dodopayments\"\\s*:", "dodopayments\\.com"]},
+    {"name": "Creem", "patterns": ["api\\.creem\\.io", "creem\\.io/(checkout|payment)"]},
+    {"name": "FastSpring", "patterns": ["\\.onfastspring\\.com", "api\\.fastspring\\.com"]},
+    {"name": "Gumroad", "patterns": ["api\\.gumroad\\.com", "gumroad\\.com/l/"]},
+    {"name": "Mollie", "patterns": ["@mollie/", "api\\.mollie\\.com"]},
+    {"name": "Adyen", "patterns": ["@adyen/", "checkout-test\\.adyen\\.com", "checkout-live\\.adyen\\.com"]},
+    {"name": "Keygen (licensing)", "patterns": ["api\\.keygen\\.sh"]},
+    {"name": "Cryptlex (licensing)", "patterns": ["api\\.cryptlex\\.com", "LexActivator"]},
+    {"name": "Apple StoreKit", "patterns": ["^\\s*import StoreKit\\b", "SKPaymentQueue", "Product\\.products\\s*\\(", "Transaction\\.updates"]},
+    {"name": "Google Play Billing", "patterns": ["com\\.android\\.billingclient", "BillingClient\\.newBuilder"]}
+  ],
+  "license_gates": [
+    {"pattern": "\\b[A-Z][A-Z0-9_]*LICEN[CS]E_KEY\\b", "strength": "strong"},
+    {"pattern": "\\b(verify|validate|check|parse|load|read)_?Licen[cs]e(Key)?\\s*\\(", "strength": "strong"},
+    {"pattern": "\\bentitled\\s*\\(\\s*[\"'][A-Za-z0-9_.-]+[\"']", "strength": "strong"},
+    {"pattern": "\\b(isEntitled|hasEntitlement|requireEntitlement|entitlementsFor)\\s*\\(", "strength": "strong"},
+    {"pattern": "[\"']edition[\"']\\s*:\\s*[\"'](enterprise|oss|community|ee|ce|pro)[\"']", "strength": "strong"},
+    {"pattern": "\\b(hasValidKey|isValidKey|isLicensed|licenseValid|hasLicense)\\s*\\(", "strength": "weak"},
+    {"pattern": "\\b(isEnterprise|isOss|enterpriseEnabled|ENTERPRISE_ENABLED)\\b", "strength": "weak"},
+    {"pattern": "(?i:licen[cs]e key)", "strength": "weak"}
+  ],
+  "plan_gates": [
+    {"pattern": "\\b(plan|planName|planId|planKey|tier|planTier|subscriptionTier)\\s*(===|==|!==|!=)\\s*[\"'](free|pro|plus|premium|team|teams|business|enterprise|max|personal|starter|growth|scale|basic)[\"']", "strength": "strong"},
+    {"pattern": "[\"'](free|pro|plus|premium|team|business|enterprise|max|personal|starter)[\"']\\s*(===|==)\\s*\\b(plan|tier|planName|planId)\\b", "strength": "strong"},
+    {"pattern": "\\b(isPro|isPremium|isPaid|isPaying|hasPaidPlan|paidPlan|isSubscribed|hasActiveSubscription|isTrialing|trialEndsAt|trialExpired)\\b", "strength": "weak"},
+    {"pattern": "\\b(paywall|upgradeRequired|requiresUpgrade|planLimit|planLimits|quotaExceeded|overQuota|usageLimit|seatLimit|maxSeats)\\b", "strength": "weak"}
+  ],
+  "offers": [
+    {"pattern": "https?://[^\\s\"'`)<>]+/(pricing|pro|upgrade|billing|checkout|buy|subscribe|plans)(?=[/?#\"'`)\\s]|$)", "strength": "strong"},
+    {"pattern": "(?i:launch price|first \\d+ (users|customers|subscribers)|limited[- ]time offer|early[- ]bird)", "strength": "strong"},
+    {"pattern": "[\"'`](?:(?:US)?\\$\\s?(?:\\d{2,}|\\d+[.,]\\d{2})|[€£]\\s?\\d+(?:[.,]\\d{2})?)[\"'`]", "strength": "strong"},
+    {"pattern": "[\"'`](Upgrade( to [A-Z][a-z]+| now)?|Get (Pro|Plus|Premium|Team|Business)|Go Pro|Start (a |your )?free trial|Buy now|See (all )?plans)[\"'`.!]", "strength": "weak"}
+  ],
+  "lead_capture": [
+    {"pattern": "\\b(posthog|analytics|mixpanel|amplitude|rudderanalytics|heap|segment)\\.(identify|alias|setUserId)\\s*\\(", "strength": "strong"},
+    {"pattern": "\\bidentify\\s*\\(\\s*(email|user\\.email|address)\\b", "strength": "strong"},
+    {"pattern": "\\b(email_submitted|lead_captured|signup_email|newsletter_signup|waitlist_joined)\\b", "strength": "strong"},
+    {"pattern": "(?i:\\bnewsletter\\b)", "strength": "weak"}
+  ],
+  "hosted_seam_words": ["CLOUD", "RELAY", "BROKER", "MANAGED", "HOSTED", "INCLUDED", "CONTROL_PLANE", "PROXY_SERVICE"],
+  "paid_folder_names": ["enterprise", "ee", "premium", "commercial", "paid", "pro-features", "business"]
+}

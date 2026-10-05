@@ -1,10 +1,10 @@
 ---
 name: weigh-in
-description: Analyze a competitor, or any product you measure yourself against, and turn the evidence into decisions. Covers who they are and how much they matter, what they sell and how they make money, the technology they own or borrow, their licenses and what you may reuse, their real traction, their telemetry and security, where they beat you and where you beat them, what to say in public and what to decide now. Strongest on open-source competitors, where it reads the code and its history without changing anything; closed products get a variant built on public sources with declared evidence levels. Use it when asked to analyze, research, benchmark or compare a competitor, a rival, an alternative or a similar product, to update an earlier competitor analysis, to check what you may reuse from another project, or to draft a comparison page, FAQ or positioning against a named product.
+description: Analyze a competitor, or any product you measure yourself against, and turn the evidence into decisions. Covers who they are and how much they matter, what they sell and how they make money, what is free and what is paid and where they convert, the technology they own or borrow, their licenses and what you may reuse, their real traction, their telemetry and security, where they beat you and where you beat them, what to say in public and what to decide now. Strongest on open-source competitors, where it reads the code and its history without changing anything; closed products get a variant built on public sources with declared evidence levels. Use it when asked to analyze, research, benchmark or compare a competitor, a rival, an alternative or a similar product, to update an earlier competitor analysis, to check what you may reuse from another project, or to draft a comparison page, FAQ or positioning against a named product.
 license: MIT
 compatibility: Needs a shell and git. The helper scripts need Python 3.9 or later and no packages. Clones, web pages and public APIs need network access. Parallel helper agents and a browser help, but are optional.
 metadata:
-  version: "0.1.1"
+  version: "0.2.0"
 ---
 
 # weigh-in
@@ -22,7 +22,7 @@ Three principles hold it together:
 The analysis answers ten questions, in this order of importance:
 
 1. Who are they really, and how much do they matter? Real numbers, not shop-window numbers.
-2. What do they sell, to whom, and how do they make money?
+2. What do they sell, to whom, and how do they make money? What is free, what is paid, and where do they convert?
 3. What technology do they use? What do they build and what do they borrow?
 4. Under which licenses? What may you use, fork or learn from, and what never?
 5. Where are they stronger than you, where weaker, and why?
@@ -36,7 +36,7 @@ Pick the variant at kickoff:
 
 | Variant | When | Output |
 |---|---|---|
-| Full | A direct competitor, ideally open source, at an important moment: their launch or yours | Four research tracks plus the deep dives that matter; a summary, seven documents and working appendices; register entries |
+| Full | A direct competitor, ideally open source, at an important moment: their launch or yours | Five research tracks plus the deep dives that matter; a summary, eight documents and working appendices; register entries |
 | Quick | A news item, a newcomer, a single question | One or two tracks; one document: who they are, what they do, license, where they stand against you, what to do; register entries |
 | Update | A competitor analyzed before | Starts from the previous analysis. Every document has "What changed", removals included, and the corrections to the earlier one; register entries are updated |
 
@@ -76,7 +76,7 @@ The full lists of checks and questions are in [kickoff.md](references/kickoff.md
 | Phase | What happens | Details |
 |---|---|---|
 | 1. Prepare | A scratch workspace outside the deliverable; the competitor cloned at today's commit; your own snapshot; the measuring scripts; the earlier analysis as the baseline | [process.md](references/process.md) |
-| 2. Research | Four standard tracks in parallel, plus deep dives only where needed | [tracks.md](references/tracks.md) |
+| 2. Research | Five standard tracks in parallel, plus deep dives only where needed | [tracks.md](references/tracks.md) |
 | 3. Verify | Re-check the decisive points yourself; reconcile numbers; check strategy-changing claims on two sources | [process.md](references/process.md) |
 | 4. Write | First the documents on the strongest reports, then comparison, plan and strategy, the summary last | [deliverables.md](references/deliverables.md) |
 | 5. Deliver | A short critical message, the answers to the ten questions, links to the files | [templates.md](references/templates.md) |
@@ -84,16 +84,17 @@ The full lists of checks and questions are in [kickoff.md](references/kickoff.md
 | 7. Publish | Only after approval, where the user says | [publishing.md](references/publishing.md) |
 | 8. Register | Decisions, actions and ideas go into one register; what to watch becomes an action | [register.md](references/register.md) |
 
-The four standard tracks:
+The five standard tracks:
 
 | Track | Covers |
 |---|---|
-| Business, traction, market | Company and people; product; price list; measured traction; reception; market and positioning; showcased partners against real integrations; distribution and search; what changed |
+| Business, traction, market | Company and people; product and editions; measured traction; reception; market and positioning; showcased partners against real integrations; distribution and search; what changed |
 | Architecture and engineering | Processes and boundaries; size and growth; data, keys, updates, signing; the product in the code; CI, tests, evaluations; cadence and people; signs of agent-assisted development; the paid layer; telemetry and network contacts; security; quality and debt |
 | The technical core against you | The layer where you really collide, on the axes in [axes.md](references/axes.md); the head-to-head; ideas to take; what not to copy |
 | Licenses and dependencies | License map; non-standard clauses; license changes over time; contribution terms (CLA, DCO); trademarks; third-party components and shipped notices; what you may do with their code; obligations; risks; questions for counsel |
+| Business model and pricing | The offer and its history; what is free and what is paid, and why; what is open and what is closed, and how the paid layer is switched on; integrations and partners; where they earn and where they convert; your model on the same rows. See [business-model.md](references/business-model.md) |
 
-Use four tracks for a full analysis, up to eight for a main competitor on the day of their launch, and one or two for a quick one. If your agent cannot run helpers in parallel, run the tracks one after another with the same brief.
+Use five tracks for a full analysis, up to eight for a main competitor on the day of their launch, and one or two for a quick one. If your agent cannot run helpers in parallel, run the tracks one after another with the same brief.
 
 ## Collect evidence
 
@@ -114,6 +115,8 @@ python3 scripts/capture_page.py https://example.com/pricing --out-dir evidence/ 
 python3 scripts/wayback.py list https://example.com/pricing --per month           # how the page looked before
 python3 scripts/removals.py commits work/repo <baseline-commit> HEAD   # what they dropped: folders, files, doc headings
 python3 scripts/removals.py pages old/pricing.txt new/pricing.txt      # lines gone from a page, rewordings apart
+python3 scripts/monetization_scan.py code work/repo --own-domain example.com   # the paid layer: keys, plan gates, offers, billing, hosted seams
+python3 scripts/monetization_scan.py page evidence/pricing.txt         # prices, units, allowances, terms, add-ons, "contact us"
 python3 scripts/claims_lint.py drafts/*.md --forbidden phrases.txt --competitor "Acme" --superlatives
 python3 scripts/md_to_notion.py --config notion.json --src analysis/ --out notion/  # convert for a Notion workspace
 python3 scripts/chunk_markdown.py notion/*.nmd --out notion/chunks                 # split for upload
@@ -130,7 +133,7 @@ Use all eleven in a full analysis. Each one has its guiding questions in [lenses
 3. **The moat:** durable (an architecture the other side refuses on principle, domain depth, trust, community) or copyable in weeks (a feature, a trick).
 4. **Licenses as an operating boundary:** take with notices, take only as an idea in a clean room, or never.
 5. **Real numbers against shop-window numbers.**
-6. **The business:** price list, how they really earn, estimated economics with the calculation written down, who owns the company, the marks and the IP.
+6. **The business model:** what is free and what is paid, and why; what is open and what is closed; where they earn and where they convert; estimated economics with the calculation written down; who owns the company, the marks and the IP.
 7. **Trust:** telemetry, what leaves the user's machine and to whom, whether the privacy policy says what the code does, app security.
 8. **Engineering:** size and growth, process, tests, cadence, debt, how much code agents write, who really holds the project.
 9. **The relationship:** competitor, supplier, channel or partner, often several at once; list the ways to coexist, cheapest first.
@@ -144,13 +147,14 @@ Default folder: `analyses/<competitor>-<YYYY-MM-DD>/`, untracked, with numbered 
 | # | Document | Holds |
 |---|---|---|
 | 00 | Summary for the decision maker | Readable in five minutes: the answer in three lines; who they are in numbers; their technology and where it comes from; licenses; where they beat you and where you beat them; uncomfortable truths about you; what to do before the next deadline, in the weeks after and later; decisions with defaults; where to read more |
-| 01 | Company, product, business | Company and people, public numbers, product, price list and revenue model, measured traction, reception, market, what changed |
+| 01 | Company, product, business | Company and people, public numbers, product and editions, price list, measured traction, reception, market, what changed |
 | 02 | Architecture and stack | Map, size and growth, data, keys, updates, signing, the product in the code, how they work, the paid layer, telemetry, security, quality, strengths and weaknesses against you |
 | 03 | The technical core | The layer where you collide, on your axes; the head-to-head; ideas to take; what not to copy |
 | 04 | Licenses and dependencies | Map, clauses, license changes, third-party components, the "can we do this?" table, obligations, risks, questions for counsel |
 | 05 | Your product side by side | Answers to the same need, technology and business row by row, the balance, what not to say, uncomfortable truths, scenarios |
 | 06 | Technical plan | The principle; work packages (before the deadline, 30 days, 90 days, later) with owner and effort; what to take, item by item; what not to copy; quick experiments with their success criterion |
 | 07 | Strategy and moves | The picture in five sentences, positioning, what to say and with which proof, FAQ, the comparison page, coexistence, pricing, what to watch, risks, decisions |
+| 08 | Business model and pricing | Their model in one table; free and paid; open and closed, and how the gate works; integrations and partners; where they earn and convert; what changed; your model on the same rows; the levers you can and cannot use; proposals; what not to say |
 
 Every document has the same skeleton: a numbered title; a header with date, audience, basis (snapshot, sources, the state of your product used) and method (read only, what you re-checked); "0. In short" with 5 to 10 points; the sections; and "What I could not verify" at the end. Write the summary last. Skeletons, style and the appendix header are in [deliverables.md](references/deliverables.md); fill-in templates are in [templates.md](references/templates.md).
 
@@ -185,6 +189,7 @@ Without a repository the method stays the same; the sources and the strength of 
 | [trust.md](references/trust.md) | Telemetry, network contacts, privacy policy against code, app security |
 | [numbers.md](references/numbers.md) | Traction without being fooled: stars, issues, downloads, running copies, registries, community, prices |
 | [licensing.md](references/licensing.md) | License families, open core, source-available terms, the reuse table, obligations, clean room, questions for counsel |
+| [business-model.md](references/business-model.md) | Track 5: the offer, free and paid, open and closed, the gate, integrations and partners, where they convert, your model side by side |
 | [mirror.md](references/mirror.md) | Reading your own product with the same rigor; uncomfortable truths |
 | [closed-source.md](references/closed-source.md) | The variant for closed products |
 | [deliverables.md](references/deliverables.md) | Folder, document skeleton, the standard set, appendices, style |

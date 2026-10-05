@@ -29,6 +29,7 @@ Document 05 and document 07 each have a "What not to say" section. It holds:
 - unmeasured numbers next to the competitor's name;
 - quality judgments: "buggy", "slow", "insecure", "toy";
 - any wording that presents your product as an imitation or replica of theirs: "clone", "copy", "the open-source <their product>";
+- "not open source" about an open-core competitor: say which part is under which license, with the file and the date;
 - phrases your claims register forbids;
 - confidential information the user shared at kickoff.
 

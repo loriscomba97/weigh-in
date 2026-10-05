@@ -12,14 +12,15 @@ Eight phases follow the kickoff ([kickoff.md](kickoff.md)). A quick analysis run
 
 ## Phase 2. Research in parallel
 
-Four standard tracks, each given to a helper with the same base brief ([templates.md](templates.md)):
+Five standard tracks, each given to a helper with the same base brief ([templates.md](templates.md)):
 
 | Track | Covers |
 |---|---|
-| Business, traction, market | Company and people; product; price list; measured traction; reception; market and positioning; showcased partners against real integrations; distribution and search; what changed |
+| Business, traction, market | Company and people; product and editions; measured traction; reception; market and positioning; showcased partners against real integrations; distribution and search; what changed |
 | Architecture and engineering | Processes and boundaries; size and growth; data, keys, updates, signing; the product in the code; CI, tests, evaluations; cadence and people; agent-assisted development; the paid layer; telemetry and network contacts; security; quality and debt |
 | The technical core against you | The layer where you collide, on your axes ([axes.md](axes.md)); the head-to-head; ideas to take; what not to copy |
 | Licenses and dependencies | License map; clauses of non-standard licenses; license changes over time; contribution terms; trademarks; third-party components and shipped notices; what you may do with their code; obligations; risks; questions for counsel |
+| Business model and pricing | The offer and its history; free and paid; open and closed, and the gate; integrations and partners; where they earn and convert; your model on the same rows ([business-model.md](business-model.md)) |
 
 The full question list for each track is in [tracks.md](tracks.md).
 
@@ -31,12 +32,12 @@ The full question list for each track is in [tracks.md](tracks.md).
 - **models and perception,** when they rely on models with special licenses, costs or privacy effects;
 - **the mechanisms,** when you need to understand how and why they do one thing;
 - **security,** when trust is the battleground;
-- **pricing and packaging,** when you are about to set or change prices;
+- **pricing and packaging for your own product,** when you are about to set or change prices: interviews, willingness to pay, packaging options;
 - **go-to-market,** when distribution is the battleground: channels, search, launches, community.
 
 **How many tracks:**
 
-- four for a full analysis;
+- five for a full analysis;
 - up to eight for a main competitor on the day of their launch;
 - one or two for a quick analysis.
 

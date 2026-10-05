@@ -39,6 +39,16 @@
 - [ ] The headline capability traced step by step in the code
 - [ ] Ideas to take, each with its license path; what not to copy, with the reason
 
+**Business model and pricing**
+
+- [ ] Pricing, cloud, enterprise and partner pages captured the same day; `monetization_scan.py page` on each
+- [ ] Price history from archives; what left the free tier (`removals.py pages`)
+- [ ] Free and paid table, with the reason for each paywall
+- [ ] Open and closed table; how the paid layer is switched on, read in the code (`monetization_scan.py code`)
+- [ ] Integrations and partners: who pays whom; placements and their price
+- [ ] The path to paying, with the in-app offers and their triggers; prices in the app against the site
+- [ ] Your own model on the same rows, and the levers you cannot use
+
 **Licenses and dependencies**
 
 - [ ] Every license file read in full where not standard; folders mapped

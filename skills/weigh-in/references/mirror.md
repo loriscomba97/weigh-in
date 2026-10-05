@@ -10,7 +10,8 @@ A comparison that skips your own weak points cannot support a decision. Read you
   - `scripts/telemetry_scan.py`: verifies or refutes any "no telemetry" claim you make;
   - `scripts/license_scan.py`: the licenses you really ship, per folder;
   - `scripts/app_security_scan.py`: the hardening you really have;
-  - `scripts/dependency_versions.py --check-latest`: your own outdated components.
+  - `scripts/dependency_versions.py --check-latest`: your own outdated components;
+  - `scripts/monetization_scan.py code`: the gates, offers and hosted services you really ship, against what your pricing page and decisions say.
 - **Use the same evidence levels** ([axes.md](axes.md)): measured on a real app, measured on a test app, reported, no evidence.
 
 ## 2. Every "ahead" row needs proof

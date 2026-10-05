@@ -11,7 +11,7 @@ Each mistake below has happened in a real analysis. Every analysis that teaches 
 5. **Building positioning on a competitor's defect.** Defects get fixed. Positioning rests on a principle of yours.
 6. **Forgetting the mirror.** A comparison without your uncomfortable truths cannot support a decision.
 7. **Reopening settled decisions.** Respect them; raise one only with a new fact.
-8. **Inflating the work.** More helpers do not mean more quality. Start with the four tracks, then add only the deep dives that pay off.
+8. **Inflating the work.** More helpers do not mean more quality. Start with the five tracks, then add only the deep dives that pay off.
 
 ## Process
 
@@ -46,16 +46,24 @@ Each mistake below has happened in a real analysis. Every analysis that teaches 
 31. **Comparing downloads across registries.** Each counts differently; compare like with like, same period, same date.
 32. **Quoting an estimate as a measurement.** Third-party traffic numbers and economics are estimates; label them and give the formula.
 
+## Business model
+
+33. **Taking a license claim on a download page for the whole story.** "The whole app is open source" can sit next to a source-available folder. Read the license files per folder and the build that ships.
+34. **Comparing list prices without units and allowances.** Per person, per seat, per workspace and per machine differ; so do monthly and annual prices.
+35. **Calling a bring-your-own-key plan free.** The user still pays the model or service provider. Say so.
+36. **Treating an in-app offer as the price list, or the reverse.** Quote each with its place and date.
+37. **Gating a local capability in permissive code and calling it a business model.** Anyone can remove a limit from code under a permissive license. The paid side has to need you.
+
 ## Web evidence
 
-33. **Quoting a page without capturing it.** Pages change; capture them with a date.
-34. **Trusting the HTML of a page that renders in the browser.** The capture may be nearly empty; use a browser tool and say so.
-35. **Reading a price from a secondary page.** Read the main pricing page, the same day.
+38. **Quoting a page without capturing it.** Pages change; capture them with a date.
+39. **Trusting the HTML of a page that renders in the browser.** The capture may be nearly empty; use a browser tool and say so.
+40. **Reading a price from a secondary page.** Read the main pricing page, the same day.
 
 ## Publishing
 
-36. **Double escapes in Notion.** Text that already has escapes gets them doubled; the converter keeps existing ones.
-37. **File names turned into links.** Names ending in `.md`, `.sh` or `.py` are domains; put paths in inline code.
-38. **Bullets born in table cells.** "+ " or "* " after bold or code text becomes a list item.
-39. **Chunks cut inside a table.** Cut only at headings outside tables, callouts and code.
-40. **Not reading the page back.** Every page is read back after upload: start, joins, end, tables, links.
+41. **Double escapes in Notion.** Text that already has escapes gets them doubled; the converter keeps existing ones.
+42. **File names turned into links.** Names ending in `.md`, `.sh` or `.py` are domains; put paths in inline code.
+43. **Bullets born in table cells.** "+ " or "* " after bold or code text becomes a list item.
+44. **Chunks cut inside a table.** Cut only at headings outside tables, callouts and code.
+45. **Not reading the page back.** Every page is read back after upload: start, joins, end, tables, links.

@@ -4,7 +4,7 @@ Instructions for coding agents working with this repository.
 
 ## What this is
 
-weigh-in is an Agent Skill that runs a competitor analysis a decision maker can act on: kickoff, four research tracks, verification, eight documents, a register of decisions, and public words with proof. [README.md](README.md) explains it; the skill itself is [skills/weigh-in/SKILL.md](skills/weigh-in/SKILL.md).
+weigh-in is an Agent Skill that runs a competitor analysis a decision maker can act on: kickoff, five research tracks, verification, nine documents, a register of decisions, and public words with proof. [README.md](README.md) explains it; the skill itself is [skills/weigh-in/SKILL.md](skills/weigh-in/SKILL.md).
 
 ## Running an analysis from this repository
 

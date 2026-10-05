@@ -2,7 +2,7 @@
 
 **Put your product and your rival on the same scale.**
 
-weigh-in is an [Agent Skill](https://agentskills.io) for competitor analysis, for agents that can run shell commands. Point it at a competitor, ideally an open-source one. It guides your agent through a kickoff, four research tracks and a set of documents that end with decisions you can defend. At a boxing weigh-in both fighters step on the same scale: weigh-in measures your own product with the same scripts and the same rules.
+weigh-in is an [Agent Skill](https://agentskills.io) for competitor analysis, for agents that can run shell commands. Point it at a competitor, ideally an open-source one. It guides your agent through a kickoff, five research tracks and a set of documents that end with decisions you can defend. At a boxing weigh-in both fighters step on the same scale: weigh-in measures your own product with the same scripts and the same rules.
 
 [Example](docs/example.md) · [Get started](#get-started) · [How it works](#how-it-works) · [Install options](docs/install.md) · [Issues](https://github.com/loriscomba97/weigh-in/issues)
 
@@ -12,7 +12,8 @@ weigh-in is an [Agent Skill](https://agentskills.io) for competitor analysis, fo
 ## What you get
 
 - **A summary for the decision maker** that answers ten questions, from "who are they really?" to "which decisions are needed now?"
-- **Seven documents:** business, architecture, the technical core, licenses, your product side by side, a technical plan, strategy.
+- **Eight documents:** business, architecture, the technical core, licenses, your product side by side, a technical plan, strategy, and the business model and pricing.
+- **The business model side by side:** what they give away and what they charge for, what is open and what is closed, where a free user becomes a customer, and which of those levers your own product can use.
 - **A register** of decisions, actions and ideas, each with its source and a proposed default.
 - **Public words you can defend:** a claims ledger, a "what not to say" list, FAQ answers within 40 words and a comparison page structure.
 
@@ -44,7 +45,7 @@ Three principles run through every step:
 2. **The mirror.** Your product is read with the same scripts and the same evidence levels as the competitor, and every analysis has a section of uncomfortable truths about you.
 3. **Read only.** The agent never installs or runs the competitor's software, creates no accounts and never writes to a repository it analyzes.
 
-Fifteen Python scripts collect the evidence and print JSON:
+Sixteen Python scripts collect the evidence and print JSON:
 
 | Script | What it measures |
 |---|---|
@@ -55,13 +56,14 @@ Fifteen Python scripts collect the evidence and print JSON:
 | `github_traction`, `public_counts` | Stars and their pace, issues and pull requests apart, release downloads decoded, registry and community counts |
 | `capture_page`, `wayback` | Dated copies of pages, and how they looked before |
 | `removals` | What disappeared since the last analysis: folders, files and doc headings between two commits, lines between two captures of a page |
+| `monetization_scan` | Where the paid layer sits in the code (license keys, plan gates, in-app offers and prices, billing SDKs, hosted services) and what a pricing page offers (prices, units, allowances, add-ons, terms) |
 | `claims_lint`, `md_to_notion`, `chunk_markdown` | Wording checks for public copy, and publishing to Notion |
 
 A script finds signals. The agent confirms each one in the code or at the source before it becomes a finding.
 
 ## What it checks
 
-Four research tracks (business and traction; architecture and engineering; the technical core against you; licenses and dependencies) and eleven lenses, from "what they own and what they integrate" to "if they..." scenarios. Comparison axes come with example sets for several product categories. Closed-source competitors get a variant built on public sources, with an evidence level on every fact. An update starts from the earlier analysis and lists what changed, including what the competitor quietly removed.
+Five research tracks (business and traction; architecture and engineering; the technical core against you; licenses and dependencies; business model and pricing) and eleven lenses, from "what they own and what they integrate" to "if they..." scenarios. Comparison axes come with example sets for several product categories. Closed-source competitors get a variant built on public sources, with an evidence level on every fact. An update starts from the earlier analysis and lists what changed, including what the competitor quietly removed.
 
 ## Limits
 

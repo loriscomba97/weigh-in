@@ -17,16 +17,10 @@ Each track below lists the questions its helper answers. Not every question appl
 
 - Product lines and editions: open source, hosted, enterprise, add-ons. What each includes.
 - Platforms and system requirements.
-- What is free and what is paid, and where the line is drawn in the code (cross-check with track 2).
+- What is free and what is paid, and where the line is drawn in the code: track 5.
 - Roadmap signals: public roadmaps, milestone and label names in the issue tracker, changelogs, job posts, conference talks.
 
-**Price list and revenue model**
-
-- The pricing page of the main site, captured the same day: `scripts/capture_page.py`. Plans, prices, currencies, taxes, seats or usage, free tier limits, trials, "contact us" tiers.
-- The price history: `scripts/wayback.py list <pricing url> --per month`, then fetch the snapshots around each change.
-- What left the pricing and features pages since the baseline: `scripts/removals.py pages <old capture> <new capture>`. Removed plans and reworded prices come out apart.
-- How they really earn: subscriptions, usage, services, support, a marketplace cut, hardware, hosting, licensing to enterprises. License key checks in the code are evidence.
-- Estimated economics, always marked "(inference)" with the calculation and the list prices used: cost per user, margin, burn.
+**Price list and business model:** track 5 below, with the method in [business-model.md](business-model.md).
 
 **Traction** (methods and traps in [numbers.md](numbers.md))
 
@@ -102,6 +96,47 @@ Methods are in [licensing.md](licensing.md).
 - **The "can we do this?" table** for their code: dependency, copy, fork, hosted service, clean-room idea, name and logo.
 - **Obligations** if you reuse anything, and the **risks:** relicensing, copyleft reaching your code, patent clauses, trademark.
 - **Questions for counsel,** written so a lawyer can answer them.
+
+## Track 5. Business model and pricing
+
+The method, the evidence and the traps are in [business-model.md](business-model.md).
+
+**The offer**
+
+- Every plan, price, unit and allowance on the pricing, cloud, enterprise or white-label and partner pages of the main site, captured the same day: `scripts/capture_page.py`, then `scripts/monetization_scan.py page <capture>`.
+- Add-ons, annual discounts, launch prices, trials, "contact us" tiers, setup fees, contract terms.
+- Prices written in the app, against the site: `scripts/monetization_scan.py code <repo> --own-domain <their domain>`.
+- The history: `scripts/wayback.py list <url> --per day`, then `fetch --text` and `scripts/removals.py pages <old> <new>`. What left the free tier, when plans appeared.
+- The payment provider and the billing entity, from the terms, the refund policy and the checkout link. Never open a checkout.
+
+**Free and paid**
+
+- The free and paid table, capability by capability, plan by plan.
+- For each paywall, why it sits there: cost to them, organizations only, scarcity, distribution (inference).
+- What they give away that costs them money, such as hosted brokers, tunnels or credits.
+
+**Open and closed**
+
+- The table of components: license, where the code lives, who runs it.
+- How the paid layer is switched on: license keys, entitlement checks, grace periods, fallbacks; private repositories and hosted seams named in the code; their written rule for what goes in the paid layer.
+- Their public license claims against the license files and the build that ships.
+
+**Integrations and partners**
+
+- For models, compute, voice, connectors and plugin catalogs: what they build, what they plug in, who pays whom.
+- The partner program: categories, price, what a partner gets, how many spots, declared audience numbers (quoted as declared).
+
+**Where they earn and where they convert**
+
+- Revenue streams ranked by likely weight, with the reasons (inference).
+- The path from first visit to paying customer: arrival, first run (account, email, analytics default), in-app offers and their triggers, reasons to pay, expansion, other businesses.
+- Economics from public list prices, always marked "(inference)".
+
+**Against yours**
+
+- Your own free and paid table and open and closed table, from your pricing data and decisions, placeholders included.
+- The levers you cannot use because of your license, your architecture or decisions already taken.
+- Your conversion moments, your price anchors, and the proposals for the register.
 
 ## Deep dives
 

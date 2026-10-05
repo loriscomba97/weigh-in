@@ -25,6 +25,19 @@ class ExampleTest(unittest.TestCase):
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
+    def test_business_model(self):
+        code = run_script("monetization_scan.py", "code", str(self.repo))
+        self.assertEqual([(h["file"], h["line"], h["strength"]) for h in code["license_gates"]], [("ee/licensing.ts", 1, "weak")])
+        self.assertEqual([(h["file"], h["line"]) for h in code["lead_capture"]], [("src/analytics.ts", 5)])
+        self.assertEqual([(f["path"], f["license_first_line"]) for f in code["paid_folders"]],
+                         [("ee", "Acme Enterprise License"), ("sync-server", "GNU AFFERO GENERAL PUBLIC LICENSE")])
+        self.assertEqual((code["billing"], code["offers"]), ([], []))
+        page = run_script("monetization_scan.py", "page", str(self.raw / "pricing.html"))["pages"][0]
+        self.assertEqual(page["price_range"], {"USD": {"min": 0.0, "max": 12.0, "count": 5}})
+        self.assertEqual([x["text"] for x in page["limits"]], ["Up to 3 devices", "Unlimited devices"])
+        self.assertEqual([x["text"] for x in page["add_ons"]], ["Sync storage add-on +$4 a month"])
+        self.assertEqual([x["text"] for x in page["contact"]], ["Custom pricing", "Contact sales"])
+
     def test_history(self):
         snap = run_script("snapshot.py", str(self.repo))
         self.assertEqual((snap["head_short"], snap["commits_on_head"], snap["tags"]), ("c739bf75", 13, 3))

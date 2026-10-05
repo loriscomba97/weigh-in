@@ -17,6 +17,7 @@ The facts that change from one analysis to the next (the state of your product, 
 | Earlier analyses, above all of the same competitor | The baseline for "What changed" and for corrections |
 | Your claims register and list of forbidden phrases, if they exist | What you may say in public and what is blocked |
 | What your own site says today about license, architecture, privacy and prices: FAQ, docs, pricing page | The public statements every comparison must agree with |
+| Your own pricing data, plans and pricing decisions, placeholders included | The mirror for track 5 ([business-model.md](business-model.md)) |
 | Your own repository, read only: the main branch and the active ones, with the date of each branch's last commit | The real state of your product, not the one in memory |
 
 Find out where these live at each kickoff. Do not assume last time's paths.
@@ -57,6 +58,7 @@ Ask only what sections 1 and 2 did not answer. Give every question a default, so
 10. The next release: when, and which branches go in? *Default: unknown; the comparison uses the main branch.*
 11. What is true today: capabilities, supported platforms and integrations, published prices or not? *Default: only what the shipped build and the site support.*
 12. Who holds which role: decisions, technical lead, product, release and deploy? *Default: owners are left blank in the plan.*
+22. Your business model: published prices, placeholders or none; what you will never charge for; levers you rule out, such as an account, telemetry or hosting. *Default: what your pricing files and decisions say; without them, document 08 lists the levers open to you.*
 
 **The rules of the moment**
 
@@ -74,7 +76,7 @@ Ask only what sections 1 and 2 did not answer. Give every question a default, so
 
 17. Local only, or also a shared workspace such as Notion or a wiki? Where, and only after your approval? *Default: local only.*
 18. Which language for the documents, and which for the working reports? *Default: documents in the language the user writes in, working reports in English.*
-19. How much parallel work is acceptable, that is, how many helpers? *Default: four, one per standard track.*
+19. How much parallel work is acceptable, that is, how many helpers? *Default: five, one per standard track.*
 
 ## 4. The kickoff agreement
 

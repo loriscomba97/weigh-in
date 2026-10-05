@@ -4,7 +4,7 @@ can try the skill's scripts in a minute, with no network and no accounts.
 
 Usage:
   python3 docs/example/make_acme.py /tmp/acme                      # the repository
-  python3 docs/example/make_acme.py /tmp/acme --raw /tmp/acme-raw  # plus saved GitHub API responses
+  python3 docs/example/make_acme.py /tmp/acme --raw /tmp/acme-raw  # plus saved API responses and a pricing page
 
 What is planted, so you know what the scripts should find:
   - an open core: the root license changes from Apache-2.0 to MIT after a CLA arrives, a sync
@@ -17,7 +17,8 @@ What is planted, so you know what the scripts should find:
   - three people over ten weeks (one with two emails), fix commits, three version tags and one
     commit with an assistant co-author trailer;
   - with --raw: repository facts and three releases whose downloads are mostly update checks, for
-    `github_traction.py --offline`.
+    `github_traction.py --offline`, and a saved pricing page, `pricing.html`, for
+    `monetization_scan.py page`.
 
 Everything is fictional: the names, numbers and dates are made up for the example.
 Standard library only, Python 3.9 or later.
@@ -202,14 +203,28 @@ def raw_responses(folder: Path) -> None:
     ])
 
 
+PRICING = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Pricing · Acme Notes</title></head>
+<body>
+<h1>Pricing</h1>
+<p>Acme Notes is free and open source. Pay for sync and teams.</p>
+<h2>Free</h2><p>$0 forever</p><ul><li>Up to 3 devices</li><li>Local notes, MIT licensed</li></ul><p>Download</p>
+<h2>Pro</h2><p>$8 per month, billed yearly</p><p>$10 billed monthly</p><ul><li>Unlimited devices</li><li>Encrypted sync</li></ul><p>Start free trial</p>
+<h2>Team</h2><p>$12 per user a month</p><ul><li>Shared notebooks</li><li>Admin console</li></ul><p>Sync storage add-on +$4 a month</p>
+<h2>Enterprise</h2><p>Custom pricing</p><ul><li>Self-hosted sync server with an enterprise license key</li><li>SSO and audit log</li></ul><p>Contact sales</p>
+</body></html>
+"""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("dest", type=Path, help="folder for the repository; must not exist yet")
-    parser.add_argument("--raw", type=Path, help="folder for saved GitHub API responses")
+    parser.add_argument("--raw", type=Path, help="folder for saved GitHub API responses and a pricing page")
     args = parser.parse_args()
     build(args.dest)
     if args.raw:
         raw_responses(args.raw)
+        (args.raw / "pricing.html").write_text(PRICING, encoding="utf-8")
     print(f"Acme Notes is ready in {args.dest}" + (f", with API responses in {args.raw}" if args.raw else "") + ".")
     return 0
 
