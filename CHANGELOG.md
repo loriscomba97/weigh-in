@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 (5 October 2026)
+
+- **What they removed.** A new script, `removals.py`, lists what disappeared between two snapshots. Between two commits: the folders that are gone (moves set apart, with where the files went), the deleted files by kind, and the headings that left README and docs files. Between two captures of a page: the lines that are gone, with reworded lines, such as a changed price, set apart. The update variant now looks for removals on purpose, and confirmed ones get their own rows in "What changed". The idea came from a reply to the launch article.
+- **Fifteen scripts and 65 tests,** with five for the new script, on Python 3.9 and 3.14.
+
 ## 0.1.0 (4 October 2026)
 
 First public release.

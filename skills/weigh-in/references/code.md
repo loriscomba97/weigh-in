@@ -32,6 +32,7 @@ python3 scripts/loc_count.py <repo> --at "$(git -C <repo> rev-list -1 --before=2
 ```bash
 python3 scripts/git_stats.py <repo>
 python3 scripts/git_stats.py <repo> --since 2026-01-01
+python3 scripts/removals.py commits <repo> <baseline commit> HEAD
 ```
 
 - **Authors and shares:** who holds the project. The top-1 and top-5 shares, and the bus factor, the fewest authors who wrote half of the non-merge commits.
@@ -41,6 +42,7 @@ python3 scripts/git_stats.py <repo> --since 2026-01-01
 - **Releases:** version tags, their dates and the gaps between them.
 - **Hotspots:** the files touched by the most commits, where change and risk concentrate.
 - **Agent-assisted development:** co-author trailers by assistant, merges of assistant branches, agent instruction files at HEAD. Patterns live in `scripts/ai_signals.json`. Trailers are optional, so the counts are a lower bound; the absence of signals proves nothing. Never present this as a quality verdict.
+- **Removals:** between two snapshots, `removals.py commits` lists the folders that are gone (moves set apart, with where the files went), the deleted files by kind and the headings that disappeared from README and docs files. A quiet removal, such as an integration folder, a docs page or a README section, can say more than a launch post. Confirm each one: a feature can move to another package or live on behind a flag.
 - **Merge styles hide history:** squash merges credit one author for many; rebases rewrite commit dates. Prefer author dates, and say which you used.
 
 ## 4. The map

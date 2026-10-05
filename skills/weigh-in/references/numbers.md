@@ -56,7 +56,7 @@ Compare like with like: the same source, the same period, the same date. For npm
 ## 4. Prices and price lists
 
 - Read the pricing page of the main site, the same day, and capture it: `scripts/capture_page.py`.
-- The history comes from archives: `scripts/wayback.py list <url> --per month`, then `fetch` the snapshots around each change.
+- The history comes from archives: `scripts/wayback.py list <url> --per month`, then `fetch` the snapshots around each change. `scripts/removals.py pages` compares two of them: a plan that disappeared and a price that changed show up apart.
 - Note the currency, taxes, billing period, seat or usage basis, and what each plan includes.
 - If the page renders in the browser, the captured HTML may be nearly empty: the capture's metadata warns you. Use a browser tool for those pages.
 

@@ -21,6 +21,7 @@
 - [ ] Declared numbers quoted as declared, next to measurements
 - [ ] Showcased partners checked against the code
 - [ ] What changed since the baseline, if there is one
+- [ ] What they removed since the baseline: `scripts/removals.py` on the two commits and on captures of the pricing, features and docs pages
 
 **Architecture and engineering**
 

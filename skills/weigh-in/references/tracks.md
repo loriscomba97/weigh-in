@@ -24,6 +24,7 @@ Each track below lists the questions its helper answers. Not every question appl
 
 - The pricing page of the main site, captured the same day: `scripts/capture_page.py`. Plans, prices, currencies, taxes, seats or usage, free tier limits, trials, "contact us" tiers.
 - The price history: `scripts/wayback.py list <pricing url> --per month`, then fetch the snapshots around each change.
+- What left the pricing and features pages since the baseline: `scripts/removals.py pages <old capture> <new capture>`. Removed plans and reworded prices come out apart.
 - How they really earn: subscriptions, usage, services, support, a marketplace cut, hardware, hosting, licensing to enterprises. License key checks in the code are evidence.
 - Estimated economics, always marked "(inference)" with the calculation and the list prices used: cost per user, margin, burn.
 

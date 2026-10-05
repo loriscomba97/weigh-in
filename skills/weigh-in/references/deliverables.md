@@ -89,5 +89,5 @@ One document, `00-quick-analysis.md`, and no appendices: working data stays in t
 
 Every document adds two sections after "0. In short":
 
-- **What changed:** a table with the item, the value before (with date), the value now (with date), and why it matters.
+- **What changed:** a table with the item, the value before (with date), the value now (with date), and why it matters. Removals are changes too: a feature, plan, platform, integration or page that existed at the baseline and is gone now gets its own row, with "gone" and the evidence (the commit range, or the two captures).
 - **Corrections to the earlier analysis:** what was wrong or is no longer true, and why.

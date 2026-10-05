@@ -44,7 +44,7 @@ Three principles run through every step:
 2. **The mirror.** Your product is read with the same scripts and the same evidence levels as the competitor, and every analysis has a section of uncomfortable truths about you.
 3. **Read only.** The agent never installs or runs the competitor's software, creates no accounts and never writes to a repository it analyzes.
 
-Fourteen Python scripts collect the evidence and print JSON:
+Fifteen Python scripts collect the evidence and print JSON:
 
 | Script | What it measures |
 |---|---|
@@ -54,13 +54,14 @@ Fourteen Python scripts collect the evidence and print JSON:
 | `telemetry_scan`, `app_security_scan` | Analytics SDKs, opt-out switches, external hosts, entitlements, Electron and Tauri settings, committed secrets |
 | `github_traction`, `public_counts` | Stars and their pace, issues and pull requests apart, release downloads decoded, registry and community counts |
 | `capture_page`, `wayback` | Dated copies of pages, and how they looked before |
+| `removals` | What disappeared since the last analysis: folders, files and doc headings between two commits, lines between two captures of a page |
 | `claims_lint`, `md_to_notion`, `chunk_markdown` | Wording checks for public copy, and publishing to Notion |
 
 A script finds signals. The agent confirms each one in the code or at the source before it becomes a finding.
 
 ## What it checks
 
-Four research tracks (business and traction; architecture and engineering; the technical core against you; licenses and dependencies) and eleven lenses, from "what they own and what they integrate" to "if they..." scenarios. Comparison axes come with example sets for several product categories. Closed-source competitors get a variant built on public sources, with an evidence level on every fact.
+Four research tracks (business and traction; architecture and engineering; the technical core against you; licenses and dependencies) and eleven lenses, from "what they own and what they integrate" to "if they..." scenarios. Comparison axes come with example sets for several product categories. Closed-source competitors get a variant built on public sources, with an evidence level on every fact. An update starts from the earlier analysis and lists what changed, including what the competitor quietly removed.
 
 ## Limits
 

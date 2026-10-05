@@ -4,7 +4,7 @@ description: Analyze a competitor, or any product you measure yourself against, 
 license: MIT
 compatibility: Needs a shell and git. The helper scripts need Python 3.9 or later and no packages. Clones, web pages and public APIs need network access. Parallel helper agents and a browser help, but are optional.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # weigh-in
@@ -38,7 +38,7 @@ Pick the variant at kickoff:
 |---|---|---|
 | Full | A direct competitor, ideally open source, at an important moment: their launch or yours | Four research tracks plus the deep dives that matter; a summary, seven documents and working appendices; register entries |
 | Quick | A news item, a newcomer, a single question | One or two tracks; one document: who they are, what they do, license, where they stand against you, what to do; register entries |
-| Update | A competitor analyzed before | Starts from the previous analysis. Every document has "What changed" and the corrections to the earlier one; register entries are updated |
+| Update | A competitor analyzed before | Starts from the previous analysis. Every document has "What changed", removals included, and the corrections to the earlier one; register entries are updated |
 
 If there is no product of yours to compare, as in pure market research, skip the mirror, document 05 and the comparison rows, and say so in the summary.
 
@@ -112,6 +112,8 @@ python3 scripts/github_traction.py owner/repo --check-interval-hours 4   # stars
 python3 scripts/public_counts.py --npm name --pypi name --discord invite   # registry downloads and community counts
 python3 scripts/capture_page.py https://example.com/pricing --out-dir evidence/   # dated copy of a page
 python3 scripts/wayback.py list https://example.com/pricing --per month           # how the page looked before
+python3 scripts/removals.py commits work/repo <baseline-commit> HEAD   # what they dropped: folders, files, doc headings
+python3 scripts/removals.py pages old/pricing.txt new/pricing.txt      # lines gone from a page, rewordings apart
 python3 scripts/claims_lint.py drafts/*.md --forbidden phrases.txt --competitor "Acme" --superlatives
 python3 scripts/md_to_notion.py --config notion.json --src analysis/ --out notion/  # convert for a Notion workspace
 python3 scripts/chunk_markdown.py notion/*.nmd --out notion/chunks                 # split for upload

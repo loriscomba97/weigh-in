@@ -79,6 +79,8 @@ Detail with every citation in `appendices/<X>.md` (quick variant: in the scratch
 ```markdown
 | Item | Before (date) | Now (date) | Why it matters |
 |---|---|---|---|
+| <item> | <value> (<date>, <source>) | <value> (<date>, <source>) | <why> |
+| <feature, plan or page> | Present (<baseline date>, `file:line` or capture) | Gone (<date>, `removals.py` output or capture) | <why> |
 ```
 
 ## "Can we do this?"
