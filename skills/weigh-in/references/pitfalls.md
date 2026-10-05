@@ -53,17 +53,18 @@ Each mistake below has happened in a real analysis. Every analysis that teaches 
 35. **Calling a bring-your-own-key plan free.** The user still pays the model or service provider. Say so.
 36. **Treating an in-app offer as the price list, or the reverse.** Quote each with its place and date.
 37. **Gating a local capability in permissive code and calling it a business model.** Anyone can remove a limit from code under a permissive license. The paid side has to need you.
+38. **Reading your own draft pricing as your product.** A placeholder said "1 agent" while the product ran any number of agents, one after another. Check the build, then fix the copy.
 
 ## Web evidence
 
-38. **Quoting a page without capturing it.** Pages change; capture them with a date.
-39. **Trusting the HTML of a page that renders in the browser.** The capture may be nearly empty; use a browser tool and say so.
-40. **Reading a price from a secondary page.** Read the main pricing page, the same day.
+39. **Quoting a page without capturing it.** Pages change; capture them with a date.
+40. **Trusting the HTML of a page that renders in the browser.** The capture may be nearly empty; use a browser tool and say so.
+41. **Reading a price from a secondary page.** Read the main pricing page, the same day.
 
 ## Publishing
 
-41. **Double escapes in Notion.** Text that already has escapes gets them doubled; the converter keeps existing ones.
-42. **File names turned into links.** Names ending in `.md`, `.sh` or `.py` are domains; put paths in inline code.
-43. **Bullets born in table cells.** "+ " or "* " after bold or code text becomes a list item.
-44. **Chunks cut inside a table.** Cut only at headings outside tables, callouts and code.
-45. **Not reading the page back.** Every page is read back after upload: start, joins, end, tables, links.
+42. **Double escapes in Notion.** Text that already has escapes gets them doubled; the converter keeps existing ones.
+43. **File names turned into links.** Names ending in `.md`, `.sh` or `.py` are domains; put paths in inline code.
+44. **Bullets born in table cells.** "+ " or "* " after bold or code text becomes a list item.
+45. **Chunks cut inside a table.** Cut only at headings outside tables, callouts and code.
+46. **Not reading the page back.** Every page is read back after upload: start, joins, end, tables, links.

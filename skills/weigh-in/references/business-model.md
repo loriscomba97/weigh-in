@@ -79,7 +79,7 @@ For each area (models, compute, voice, connectors, plugin catalogs, templates): 
 
 Run the mirror on the same rows ([mirror.md](mirror.md)):
 
-- **Your free and paid map,** from your pricing data or your decisions. A placeholder is still a fact about your intentions: quote its file and line.
+- **Your free and paid map,** from your pricing data or your decisions. A placeholder is still a fact about your intentions: quote its file and line. Then check it against the product, because a draft pricing page can understate or overstate what the build gives: count what really runs, how many at once, and what waits in a queue.
 - **Your open and closed map.** If everything you ship is under one permissive license, nothing in your code can be sold: a limit in the code is a limit anyone can remove. Your paid side then has to be services, content or guarantees that need you: maintained data, hosted services that cost you, support, compliance, validated releases, training.
 - **The levers you cannot use,** because of your license, your architecture or decisions already taken, such as "runs only on the user's machine" or "no account".
 - **Your conversion moments.** Without telemetry, conversion has to be designed into the product: the moment a user meets the limit your paid offer removes.
